@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alert_navigation"
+    app:startDestination="@id/alertDashBoard2">
+    <fragment
+        android:id="@+id/alertDashBoard2"
+        android:name="com.example.sdcresourcemonitor.view.AlertDashBoard"
+        android:label="@string/app_bar_title"
+        tools:layout="@layout/fragment_alert_dashboard">
+        <action
+            android:id="@+id/action_alertDashBoard2_to_alertListFragment"
+            app:destination="@id/alertListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alertListFragment"
+        android:name="com.example.sdcresourcemonitor.view.AlertListFragment"
+        android:label="@string/app_bar_title"
+        tools:layout="@layout/fragment_alert_list" >
+        <action
+            android:id="@+id/action_alertListFragment_to_alertDashBoard2"
+            app:destination="@id/alertDashBoard2" />
+        <argument
+            android:name="alertLevel"
+            app:argType="string"
+            android:defaultValue="all" />
+        <argument
+            android:name="alertSection"
+            app:argType="string"
+            android:defaultValue="all" />
+    </fragment>
+</navigation>

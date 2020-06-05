@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="total_alert_card_head">14sp</dimen>
+    <dimen name="total_alert_card_alert">10sp</dimen>
+    <dimen name="total_alert_card_count">22sp</dimen>
+    <dimen name="total_alert_card_icon_height">20dp</dimen>
+    <dimen name="total_alert_card_icon_width">20dp</dimen>
+    <dimen name="total_alert_card_layout_margin_top">80dp</dimen>
+</resources>
