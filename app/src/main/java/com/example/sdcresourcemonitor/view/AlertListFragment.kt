@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.sdcresourcemonitor.R
+import com.example.sdcresourcemonitor.view.adapter.AlertListAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
-import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 import kotlinx.android.synthetic.main.fragment_alert_list.*
 import kotlinx.android.synthetic.main.fragment_alert_list.errorTextView
 
@@ -35,7 +35,10 @@ class AlertListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //init viewmodel
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
-        alertListAdapter = AlertListAdapter(ArrayList())
+        alertListAdapter =
+            AlertListAdapter(
+                ArrayList()
+            )
 
         arguments?.let {
             alertSection = AlertListFragmentArgs.fromBundle(it).alertSection

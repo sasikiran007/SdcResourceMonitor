@@ -1,4 +1,4 @@
-package com.example.sdcresourcemonitor.view
+package com.example.sdcresourcemonitor.view.listener
 
 import android.view.View
 

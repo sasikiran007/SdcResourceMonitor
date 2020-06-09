@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.example.sdcresourcemonitor.view.ViewOnClickListener" />
+            type="com.example.sdcresourcemonitor.view.listener.ViewOnClickListener" />
     </data>
 
 

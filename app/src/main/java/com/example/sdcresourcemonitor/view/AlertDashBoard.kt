@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sdcresourcemonitor.R
+import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
@@ -20,7 +21,10 @@ class AlertDashBoard : Fragment() {
     private val TAG = "AlertDashBoard"
 
     private lateinit var viewModel: AlertStatViewModel
-    val alertStatadapter = AlertStatListViewAdapter(ArrayList())
+    val alertStatadapter =
+        AlertStatListViewAdapter(
+            ArrayList()
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

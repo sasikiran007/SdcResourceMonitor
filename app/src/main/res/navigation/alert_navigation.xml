@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_alert_dashboard">
         <action
             android:id="@+id/action_alertDashBoard2_to_alertListFragment2"
-            app:destination="@id/alertListFragment" />
+            app:destination="@id/alertListTabbedFragment2" />
     </fragment>
     <fragment
         android:id="@+id/alertListFragment"
@@ -21,9 +21,21 @@
         <argument
             android:name="alertSection"
             app:argType="string"
-            android:defaultValue="all" />
+            android:defaultValue="%%" />
         <action
             android:id="@+id/action_alertListFragment_to_alertDashBoard22"
             app:destination="@id/alertDashBoard2" />
+    </fragment>
+    <fragment
+        android:id="@+id/alertListTabbedFragment2"
+        android:name="com.example.sdcresourcemonitor.view.AlertListTabbedFragment"
+        android:label="AlertListTabbedFragment" >
+        <action
+            android:id="@+id/action_alertListTabbedFragment2_to_alertDashBoard2"
+            app:destination="@id/alertDashBoard2" />
+        <argument
+            android:name="alertSection"
+            app:argType="string"
+            android:defaultValue="%%" />
     </fragment>
 </navigation>

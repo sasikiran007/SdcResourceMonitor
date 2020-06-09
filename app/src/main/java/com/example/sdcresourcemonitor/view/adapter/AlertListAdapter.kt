@@ -1,15 +1,12 @@
-package com.example.sdcresourcemonitor.view
+package com.example.sdcresourcemonitor.view.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.AlertItemBinding
 import com.example.sdcresourcemonitor.model.Alert
-import kotlinx.android.synthetic.main.alert_item.view.*
-import kotlinx.android.synthetic.main.sample.view.*
 
 class AlertListAdapter(val alerts : ArrayList<Alert>) : RecyclerView.Adapter<AlertListAdapter.AlertListViewHolder>() {
 
@@ -20,7 +17,9 @@ class AlertListAdapter(val alerts : ArrayList<Alert>) : RecyclerView.Adapter<Ale
         val inflater = LayoutInflater.from(parent.context)
         val view = DataBindingUtil.inflate<AlertItemBinding>(inflater,R.layout.alert_item,parent,false)
 //        val view = inflater.inflate(R.layout.alert_item,parent,false)
-        return AlertListViewHolder(view)
+        return AlertListViewHolder(
+            view
+        )
     }
 
     override fun getItemCount() = alerts.size

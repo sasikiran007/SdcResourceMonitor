@@ -1,4 +1,4 @@
-package com.example.sdcresourcemonitor.view
+package com.example.sdcresourcemonitor.view.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,12 +12,12 @@ import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.AlertStatHeaderItemBinding
 import com.example.sdcresourcemonitor.databinding.AlertStatItemBinding
 import com.example.sdcresourcemonitor.model.AlertStat
-import kotlinx.android.synthetic.main.alert_stat_header_item.view.*
-import kotlinx.android.synthetic.main.alert_stat_item.view.*
-import javax.net.ssl.HostnameVerifier
+import com.example.sdcresourcemonitor.view.AlertDashBoardDirections
+import com.example.sdcresourcemonitor.view.listener.ViewOnClickListener
 
 class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ViewOnClickListener {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    ViewOnClickListener {
 
     private val TYPE_HEADER = 0
     private val TYPE_ITEM = 1
@@ -43,7 +43,9 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
                 parent,
                 false
             )
-            ItemViewHolder(view)
+            ItemViewHolder(
+                view
+            )
         } else {
             val view = DataBindingUtil.inflate<AlertStatHeaderItemBinding>(
                 inflater,
@@ -51,7 +53,9 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
                 parent,
                 false
             )
-            HeadViewHolder(view)
+            HeadViewHolder(
+                view
+            )
         }
 
     }
