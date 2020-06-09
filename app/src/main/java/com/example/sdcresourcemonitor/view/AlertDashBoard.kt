@@ -25,6 +25,7 @@ class AlertDashBoard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        Log.i(TAG,"onCreate method called")
     }
 
 
@@ -33,6 +34,9 @@ class AlertDashBoard : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        Log.i(TAG,"onCreateView method called")
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
@@ -53,7 +57,7 @@ class AlertDashBoard : Fragment() {
             errorTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
-            viewModel.refresh()
+            viewModel.refreshByPassLocal()
             swipeTorefresh.isRefreshing = false
         }
 

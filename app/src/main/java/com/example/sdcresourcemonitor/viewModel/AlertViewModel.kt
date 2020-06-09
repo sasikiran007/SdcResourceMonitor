@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.local.AlertDatabase
-import com.example.sdcresourcemonitor.model.network.AlertApiServvice
+import com.example.sdcresourcemonitor.model.network.AlertApiService
 import com.example.sdcresourcemonitor.util.REFRESH_TIME
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.Single
@@ -22,12 +22,17 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
 
-    private val alertApi = AlertApiServvice()
+    private var alertSection : String = "%%"
+    private var alertLevel : String = "%%"
+
+    private val alertApi = AlertApiService()
     private val disposable = CompositeDisposable()
     private val prefHelper = SharedpreferenceHelper.invoke(getApplication())
     private val database = AlertDatabase.invoke(application)
 
-    fun refresh() {
+    fun refresh(newAlertSection : String, newAlertLevel : String) {
+        alertSection = newAlertSection
+        alertLevel = newAlertLevel
         val updateTime = prefHelper.getUpdatedTimeList()
         if( updateTime!= null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME)  {
             fetchFromLocal()
@@ -40,7 +45,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
         isLoading.value = true
         launch {
             val dao = database.getAlertDao()
-            dataRetrieved(dao.getAll())
+            dataRetrieved(dao.getAlerts(alertSection,alertLevel))
             Toast.makeText(getApplication(),"Alert data downloaded from local", Toast.LENGTH_LONG).show()
         }
     }
@@ -76,7 +81,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
                 alerts[i].uuid = alertUuids[i]
             }
             prefHelper.saveUpdateTimeList(System.nanoTime())
-            dataRetrieved(alerts)
+            dataRetrieved(dao.getAlerts(alertSection,alertLevel))
             Toast.makeText(getApplication(),"Alert data downloaded from network", Toast.LENGTH_LONG).show()
         }
 

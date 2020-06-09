@@ -20,7 +20,8 @@ class AlertListFragment : Fragment() {
 
     lateinit var alertListAdapter : AlertListAdapter
     lateinit var viewModel : AlertViewModel
-    private var alertLevel :String = "all"
+    private var alertSection :String = "%%"
+    private var alertLevel = "%%"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,14 +38,14 @@ class AlertListFragment : Fragment() {
         alertListAdapter = AlertListAdapter(ArrayList())
 
         arguments?.let {
-            alertLevel = AlertListFragmentArgs.fromBundle(it).alertLevel
+            alertSection = AlertListFragmentArgs.fromBundle(it).alertSection
         }
 
-        viewModel.refresh()
+        viewModel.refresh(alertSection,alertLevel)
         swipeRefreshList.setOnRefreshListener {
             swipeRefreshList.isRefreshing = false
             viewModel.isLoading.value = true
-            viewModel.refresh()
+            viewModel.refresh(alertSection,alertLevel)
         }
 
         observeViewModel()

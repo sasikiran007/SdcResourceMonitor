@@ -17,13 +17,13 @@ import kotlinx.android.synthetic.main.alert_stat_item.view.*
 import javax.net.ssl.HostnameVerifier
 
 class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(),ViewOnClickListener {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ViewOnClickListener {
 
     private val TYPE_HEADER = 0
     private val TYPE_ITEM = 1
     private val TAG = "Adapter"
 
-    private var alertSection = "all"
+    private var alertSection = "%%"
     fun updateAlertStats(newAlertStats: List<AlertStat>) {
         Log.i(TAG, "update method called : ${newAlertStats.size}")
         alertStats.clear()
@@ -63,17 +63,9 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
         if (holder is ItemViewHolder) {
             holder.view.alertStat = alertStats[position]
             holder.view.listener = this
-//            holder.itemView.sectionTextView.text = alertStat.section.toUpperCase()
-//            holder.itemView.crCount.text = alertStat.criticalCount.toString()
-//            holder.itemView.mjCount.text = alertStat.majorCount.toString()
-//            holder.itemView.mnCount.text = alertStat.minorCount.toString()
-            Log.i("Binded :", "$position")
         } else {
             (holder as HeadViewHolder).view.alertStat = alertStats[position]
-            (holder as HeadViewHolder).view.listener = this
-//            holder.itemView.totalCrCount.text = alertStat.criticalCount.toString()
-//            holder.itemView.totalMjCount.text = alertStat.majorCount.toString()
-//            holder.itemView.totalMnCount.text = alertStat.minorCount.toString()
+            holder.view.listener = this
         }
     }
 
@@ -86,22 +78,14 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
     }
 
     override fun onClick(view: View) {
-        view.sectionTextView
-        var alertLevel: String
-        when (view.tag) {
-            "10"  -> alertLevel = "all"
-            "11" -> alertLevel = "critical"
-            "12" -> alertLevel = "major"
-            "13" -> alertLevel = "minor"
-            else -> alertLevel = "all"
+        var alertSection: String = view.tag.toString()
+        if(alertSection == "all") alertSection = "%%"
 
-        }
-        Toast.makeText(view.context, "Item clicked!!! ${view.tag} : $alertLevel", Toast.LENGTH_SHORT).show()
+        Toast.makeText(view.context, "Item clicked!!! $alertSection", Toast.LENGTH_SHORT).show()
         Navigation.findNavController(view).navigate(
-            AlertDashBoardDirections.actionAlertDashBoard2ToAlertListFragment(
-                alertLevel = alertLevel
+            AlertDashBoardDirections.actionAlertDashBoard2ToAlertListFragment2(
+                alertSection = alertSection
             )
-
         )
 
 

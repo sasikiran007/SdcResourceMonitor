@@ -28,6 +28,7 @@ class AlertListAdapter(val alerts : ArrayList<Alert>) : RecyclerView.Adapter<Ale
     override fun onBindViewHolder(holder: AlertListViewHolder, position: Int) {
         holder.view.alert = alerts[position]
         holder.view.sl = position + 1
+//        holder.itemView.time.text = MyUtilKt.epochToText
 //        holder.view.message.text = alerts[position].message
 //        holder.view.entity.text = alerts[position].entity
 //        holder.view.time.text = alerts[position].date.toString()

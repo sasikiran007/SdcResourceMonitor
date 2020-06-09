@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.local.AlertDatabase
-import com.example.sdcresourcemonitor.model.network.AlertApiServvice
+import com.example.sdcresourcemonitor.model.network.AlertApiService
 import com.example.sdcresourcemonitor.util.REFRESH_TIME
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +24,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
 //    private val REFRESH_THRESHOLD = 10 * 1000 * 1000 * 1000L
     private val prefsHelper = SharedpreferenceHelper.invoke(getApplication())
 
-    private val alertApiService = AlertApiServvice()
+    private val alertApiService = AlertApiService()
     private val disposable = CompositeDisposable()
     private val database = AlertDatabase.invoke(getApplication())
 
@@ -35,7 +35,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
     fun refresh() {
         Log.i(TAG, " refresh method called")
         val updateTime = prefsHelper.getUpdatedTime()
-        if (updateTime != null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME) {
+        if (updateTime != null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME ) {
 
             Log.i(TAG, " Refreshing from local : ${updateTime.div(1000000000)} :${REFRESH_TIME.div(1000000000)} : ${System.nanoTime().div(1000000000) - updateTime.div(1000000000)} ")
             fetchFromLocal()
@@ -45,13 +45,23 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
         }
     }
 
+    fun refreshByPassLocal() {
+        fetchFromNetwork()
+    }
+
 
     private fun fetchFromLocal() {
         isLoading.value = true
         launch {
             val dao = database.getAlertStatDao()
-            dataRetrieved(dao.getAll())
-            Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT).show()
+            val alerts = dao.getAll()
+            if(alerts.isNotEmpty()) {
+                dataRetrieved(alerts)
+                Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT)
+                    .show()
+            }else {
+                fetchFromNetwork()
+            }
         }
 
     }

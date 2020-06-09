@@ -20,7 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/design_default_color_background"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:onClick="@{listener::onClick}"
+        android:tag="@{alertStat.section}">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/crCardView"
@@ -31,11 +33,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/crCardViewItem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
                 android:orientation="vertical"
-                android:tag="11">
+                >
 
                 <TextView
                     android:id="@+id/crCount"
@@ -43,7 +45,6 @@
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:tag="20"
                     android:text="@{String.valueOf(alertStat.criticalCount)}"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -70,11 +71,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/mjCardViewItem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
-                android:orientation="vertical"
-                android:tag="12">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/mjCount"
@@ -109,11 +109,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/mnCardViewItem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
-                android:orientation="vertical"
-                android:tag="13">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/mnCount"
@@ -141,14 +140,12 @@
 
 
         <TextView
-            android:id="@+id/sectionTextView"
+            android:id="@+id/sectionTextViewItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
-            android:onClick="@{listener::onClick}"
-            android:tag="10"
             android:text="@{alertStat.section.toUpperCase()}"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -162,7 +159,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:text="@{MyUtil.epochToText()}"
+            android:text="12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="alertStat"
             type="com.example.sdcresourcemonitor.model.AlertStat" />
+
         <variable
             name="listener"
             type="com.example.sdcresourcemonitor.view.ViewOnClickListener" />
@@ -16,22 +18,22 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="232dp"
-        android:background="@drawable/alert_dashboard_bg_top">
+        android:background="@drawable/alert_dashboard_bg_top"
+        android:onClick="@{listener::onClick}"
+        android:tag="@{alertStat.section}">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/sectionTextViewHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginLeft="32dp"
             android:layout_marginTop="24dp"
-            android:tag="10"
             android:text="All alerts"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{listener::onClick}"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/crCardView"
@@ -42,10 +44,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/crCardViewHeader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
-                android:tag="11">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/totalCrImageView"
@@ -114,10 +115,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mjCardViewHeader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
-                android:tag="12">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/totalMjImageView"
@@ -182,10 +182,9 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mnCardViewHeader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="@{listener::onClick}"
-                android:tag="13">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/totalMnImageView"

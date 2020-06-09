@@ -22,16 +22,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*
-        mainRv.layoutManager = LinearLayoutManager(applicationContext)
-        val texts = ArrayList<String>()
-        texts.add("sasi")
-        texts.add("kiran")
-        texts.add("kilari")
-        adapter = AlertListAdapter(texts)
-        mainRv.adapter = adapter
-        adapter.update(texts)*/
-
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(findViewById(R.id.toolbar1))
