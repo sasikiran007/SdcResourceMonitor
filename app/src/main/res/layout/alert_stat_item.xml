@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/design_default_color_background"
-        android:padding="8dp"
+        android:padding="4dp"
         android:onClick="@{listener::onClick}"
         android:tag="@{alertStat.section}">
 
@@ -28,7 +28,7 @@
             android:id="@+id/crCardView"
             style="@style/Widget.SDC.AlertStat.Item.Theme"
             android:layout_marginStart="120dp"
-            android:layout_marginLeft="120dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -36,8 +36,7 @@
                 android:id="@+id/crCardViewItem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/crCount"
@@ -66,6 +65,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/mjCardView"
             style="@style/Widget.SDC.AlertStat.Item.Theme"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/mnCardView"
             app:layout_constraintStart_toEndOf="@+id/crCardView"
             app:layout_constraintTop_toTopOf="parent">
@@ -104,7 +104,7 @@
             android:id="@+id/mnCardView"
             style="@style/Widget.SDC.AlertStat.Item.Theme"
             android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

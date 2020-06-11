@@ -19,7 +19,7 @@
         android:label="@string/app_bar_title"
         tools:layout="@layout/fragment_alert_list" >
         <argument
-            android:name="alertSection"
+            android:name="alertSectionOld"
             app:argType="string"
             android:defaultValue="%%" />
         <action

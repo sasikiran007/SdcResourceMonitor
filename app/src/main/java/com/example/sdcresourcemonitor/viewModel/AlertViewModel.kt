@@ -41,6 +41,12 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+    fun refreshByPassLocal(newAlertSection : String, newAlertLevel : String) {
+        alertSection = newAlertSection
+        alertLevel = newAlertLevel
+        fetchFromNetwork()
+    }
+
     private fun fetchFromLocal() {
         isLoading.value = true
         launch {
