@@ -9,19 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.util.AlertLevel
 import com.example.sdcresourcemonitor.view.adapter.AlertListTabbedAdapter
+import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.alert_item.*
 import kotlinx.android.synthetic.main.fragment_alert_list_tabbed.*
 
 
-class AlertListTabbedFragment : Fragment() , AdapterView.OnItemSelectedListener {
-
-    var languages = arrayOf("Java", "PHP", "Kotlin", "Javascript", "Python", "Swift")
-    val NEW_SPINNER_ID = 1
-
+class AlertListTabbedFragment : Fragment() {
     private lateinit var alertListTabbedAdapter: AlertListTabbedAdapter
     private lateinit var viewPager: ViewPager2
     private var _alertSection = "%%"
@@ -48,7 +48,7 @@ class AlertListTabbedFragment : Fragment() , AdapterView.OnItemSelectedListener 
         }
 
 
-        alertListTabbedAdapter = AlertListTabbedAdapter(this, 3, _alertSection)
+        alertListTabbedAdapter = AlertListTabbedAdapter(this, 3, _alertSection,"%%")
         viewPager = view_pager
         viewPager.isUserInputEnabled = false
         viewPager.adapter = alertListTabbedAdapter
@@ -63,34 +63,13 @@ class AlertListTabbedFragment : Fragment() , AdapterView.OnItemSelectedListener 
             }
         }.attach()
 
-
-        var aa = activity?.let { ArrayAdapter(it, android.R.layout.simple_spinner_item, languages) }
-        aa?.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        with(mySpinner) {
-            adapter = aa
-            setSelection(0,false)
-            onItemSelectedListener = this@AlertListTabbedFragment
-            prompt = "Select alert type"
-            gravity = Gravity.CENTER
-
-        }
-
-
     }
+
 
     companion object {
         fun getInstance(): Fragment {
             return AlertListTabbedFragment()
         }
     }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        TODO("Not yet implemented")
-    }
-
 
 }

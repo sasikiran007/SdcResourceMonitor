@@ -9,18 +9,25 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.sdcresourcemonitor.R
+import com.example.sdcresourcemonitor.view.listener.RadioButtonClickListener
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import kotlinx.android.synthetic.main.fragment_alert_list.*
-import kotlinx.android.synthetic.main.fragment_selected_alerts.*
 
 
 private const val ARG_OBJECT1 = "alertSection"
 private const val ARG_OBJECT2 = "alertLevel"
+private const val ARG_OBJECT3 = "entity"
 
-class AlertListTabbedAdapter(fragment : Fragment, val itemsCount: Int,val alertSection : String) :
+class AlertListTabbedAdapter(
+    fragment: Fragment,
+    val itemsCount: Int,
+    val alertSection: String,
+    val entity: String
+) :
     FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
@@ -28,44 +35,54 @@ class AlertListTabbedAdapter(fragment : Fragment, val itemsCount: Int,val alertS
     }
 
     override fun createFragment(position: Int): Fragment {
-        val fragment  = SelectedAlertsFragment()
+        val fragment = SelectedAlertsFragment()
         fragment.arguments = Bundle().apply {
-            putString(ARG_OBJECT1,alertSection)
-            putInt(ARG_OBJECT2,position)
+            putString(ARG_OBJECT1, alertSection)
+            putInt(ARG_OBJECT2, position)
+            putString(ARG_OBJECT3, entity)
         }
         return fragment
     }
 }
 
-class SelectedAlertsFragment : Fragment() {
+class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
-    lateinit var alertListAdapter : AlertListAdapter
-    lateinit var viewModel : AlertViewModel
-    private var _alertSection :String = "%%"
+    lateinit var alertListAdapter: AlertListAdapter
+    lateinit var entityFilterAdapter: EntityFilterAdapter
+    lateinit var viewModel: AlertViewModel
+    private var _alertSection: String = "%%"
     private var _alertLevel = "%%"
+    private var _entity = "%%"
     private val TAG = "SelectedAlertsFragment"
+
+    private var _showFilterGrid = false
+
+    private var ENTITY_FILTER_SELECTED_POSITION = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_alert_list,container,false)
+        return inflater.inflate(R.layout.fragment_alert_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+
+
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
-        alertListAdapter =
-            AlertListAdapter(
-                ArrayList()
-            )
+
+        alertListAdapter = AlertListAdapter(ArrayList())
+
+        entityFilterAdapter = EntityFilterAdapter(ArrayList(),this)
 
         arguments?.takeIf { it.containsKey(ARG_OBJECT1) }?.apply {
             _alertSection = getString(ARG_OBJECT1).toString()
         }
+
         arguments?.takeIf { it.containsKey(ARG_OBJECT2) }?.apply {
-            _alertLevel = when(getInt(ARG_OBJECT2)) {
+            _alertLevel = when (getInt(ARG_OBJECT2)) {
                 0 -> "critical"
                 1 -> "major"
                 2 -> "minor"
@@ -73,12 +90,23 @@ class SelectedAlertsFragment : Fragment() {
             }
 
         }
-        Log.i(TAG,"$_alertLevel , $_alertSection")
-        viewModel.refresh(_alertSection,_alertLevel)
+
+        arguments?.takeIf { it.containsKey(ARG_OBJECT3) }?.apply {
+            _entity = getString(ARG_OBJECT3).toString()
+        }
+
+        Log.i(TAG, "$_alertLevel , $_alertSection, $_entity")
+
+        viewModel.isLoading.value = true
+
+        _showFilterGrid = false
+        viewModel.refresh(_alertSection, _alertLevel, _entity)
+
         swipeRefreshList.setOnRefreshListener {
+            _showFilterGrid = false
             swipeRefreshList.isRefreshing = false
             viewModel.isLoading.value = true
-            viewModel.refreshByPassLocal(_alertSection,_alertLevel)
+            viewModel.refreshByPassLocal(_alertSection, _alertLevel, _entity)
         }
 
         observeViewModel()
@@ -89,50 +117,80 @@ class SelectedAlertsFragment : Fragment() {
             alertListRecyclerView.adapter = alertListAdapter
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
+
+        filterGridRecyclerView.apply {
+            layoutManager = GridLayoutManager(context, 3)
+//            layoutManager = LinearLayoutManager(context)
+            adapter = entityFilterAdapter
+        }
+
     }
 
 
     private fun observeViewModel() {
+        viewModel.entities.observe(viewLifecycleOwner, Observer { entities ->
+            entities?.let {
+                entityFilterAdapter.update(entities)
+                if (entities.isEmpty())
+                    setVisibility(hasAlert = true)
+                else if(entities.size == 1) {
+                    setVisibility(hasAlertList = true, hasEntity = false)
+                }else {
+                    setVisibility(hasAlertList = true, hasEntity = true)
+                }
+
+            }
+        })
         viewModel.alerts.observe(viewLifecycleOwner, Observer { alerts ->
             alerts?.let {
-                errorTextView.visibility = View.GONE
-                progressBarList.visibility = View.GONE
-                Log.i(TAG,"${alerts.size}")
-                if(alerts.isEmpty()) {
-                    noAlerts.visibility = View.VISIBLE
-                    alertListRecyclerView.visibility = View.GONE
-                }else {
-                    noAlerts.visibility = View.GONE
-                    alertListRecyclerView.visibility = View.VISIBLE
+                if (alerts.isEmpty()) {
+                    setVisibility(hasAlert = true)
+                } else {
+                    setVisibility(hasAlertList = true,hasEntity = true)
                 }
                 alertListAdapter.update(alerts)
             }
         })
-
-        viewModel.isLoading.observe(viewLifecycleOwner,Observer { isLoading ->
-            if(isLoading == true) {
-                noAlerts.visibility = View.GONE
-                alertListRecyclerView.visibility = View.GONE
-                errorTextView.visibility = View.GONE
-                progressBarList.visibility = View.VISIBLE
-            }else {
-                noAlerts.visibility = View.GONE
-                progressBarList.visibility = View.GONE
-                noAlerts.visibility = View.VISIBLE
-            }
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            if(!_showFilterGrid) setVisibility(hasProgress = isLoading)
+            else setVisibility(hasAlert = true,hasProgress = isLoading)
+            Log.i(TAG,"show grid : $_showFilterGrid")
         })
-
         viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
-            if(hasError == true) {
-                noAlerts.visibility = View.GONE
-                alertListRecyclerView.visibility = View.GONE
-                errorTextView.visibility = View.VISIBLE
-                progressBarList.visibility = View.GONE
-            }else {
-                errorTextView.visibility = View.GONE
-                noAlerts.visibility = View.VISIBLE
-            }
+            setVisibility(hasError = hasError)
         })
+    }
+
+    private fun setVisibility(
+        hasAlert: Boolean = false,
+        hasError: Boolean = false,
+        hasProgress: Boolean = false,
+        hasAlertList: Boolean = false,
+        hasEntity: Boolean = false
+    ) {
+        if (hasAlert) noAlerts.visibility = View.VISIBLE else noAlerts.visibility = View.GONE
+        if (hasAlertList) alertListRecyclerView.visibility = View.VISIBLE else alertListRecyclerView.visibility = View.GONE
+        if (hasError) errorTextView.visibility = View.VISIBLE else errorTextView.visibility = View.GONE
+        if (hasProgress) progressBarList.visibility = View.VISIBLE else progressBarList.visibility = View.GONE
+        if (hasEntity) filterGridRecyclerView.visibility = View.VISIBLE else filterGridRecyclerView.visibility = View.GONE
+
+        Log.i(
+            TAG,
+            "noAlerts:${noAlerts.visibility}, alerts:${alertListRecyclerView.visibility}, hasError:${errorTextView.visibility}," +
+                    "progress:${progressBarList.visibility}, filter:${filterGridRecyclerView.visibility}"
+        )
+
+    }
+
+    override fun radioButtonClickListener(position: Int, name : String) {
+        if(ENTITY_FILTER_SELECTED_POSITION != position) {
+            Log.i(TAG,"Radio button clicked")
+            entityFilterAdapter.updatePosition(position)
+            ENTITY_FILTER_SELECTED_POSITION = position
+            _entity = if(name == "All") "%%" else name
+            _showFilterGrid = true
+            viewModel.refresh(_alertSection, _alertLevel, _entity)
+        }
     }
 
 }

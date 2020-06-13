@@ -1,6 +1,7 @@
 package com.example.sdcresourcemonitor.viewModel
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,18 +22,23 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
     val alerts  =  MutableLiveData<List<Alert>>()
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
+    val entities = MutableLiveData<List<String>>()
 
     private var alertSection : String = "%%"
     private var alertLevel : String = "%%"
+    private var entity : String = "%%"
+
+    private val TAG : String = "AlertViewModel"
 
     private val alertApi = AlertApiService()
     private val disposable = CompositeDisposable()
     private val prefHelper = SharedpreferenceHelper.invoke(getApplication())
     private val database = AlertDatabase.invoke(application)
 
-    fun refresh(newAlertSection : String, newAlertLevel : String) {
+    fun refresh(newAlertSection : String, newAlertLevel : String, newEntity : String) {
         alertSection = newAlertSection
         alertLevel = newAlertLevel
+        entity = newEntity
         val updateTime = prefHelper.getUpdatedTimeList()
         if( updateTime!= null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME)  {
             fetchFromLocal()
@@ -41,9 +47,10 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun refreshByPassLocal(newAlertSection : String, newAlertLevel : String) {
+    fun refreshByPassLocal(newAlertSection : String, newAlertLevel : String, newEntity : String) {
         alertSection = newAlertSection
         alertLevel = newAlertLevel
+        entity = newEntity
         fetchFromNetwork()
     }
 
@@ -51,7 +58,9 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
         isLoading.value = true
         launch {
             val dao = database.getAlertDao()
-            dataRetrieved(dao.getAlerts(alertSection,alertLevel))
+            dataRetrieved(dao.getAlerts(alertSection,alertLevel,entity))
+            Log.i(TAG,"fetch from local database called")
+            entitiesRetrived(dao.getEntities(alertSection,alertLevel))
             Toast.makeText(getApplication(),"Alert data downloaded from local", Toast.LENGTH_LONG).show()
         }
     }
@@ -70,7 +79,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
 
                     override fun onError(e: Throwable) {
                         hasError.value = true
-                        isLoading.value = false
+//                        isLoading.value = false
                         Toast.makeText(getApplication(),"Ayyoo, Error in loading List",Toast.LENGTH_LONG).show()
                     }
 
@@ -87,7 +96,9 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
                 alerts[i].uuid = alertUuids[i]
             }
             prefHelper.saveUpdateTimeList(System.nanoTime())
-            dataRetrieved(dao.getAlerts(alertSection,alertLevel))
+            dataRetrieved(dao.getAlerts(alertSection,alertLevel,entity))
+            Log.i(TAG,"loading data into database")
+            entitiesRetrived(dao.getEntities(alertSection,alertLevel))
             Toast.makeText(getApplication(),"Alert data downloaded from network", Toast.LENGTH_LONG).show()
         }
 
@@ -95,8 +106,13 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
 
     private fun dataRetrieved(newalerts : List<Alert>) {
         alerts.value = newalerts
-        isLoading.value = false
-        hasError.value = false
+//        isLoading.value = false
+//        hasError.value = false
+    }
+
+    private fun entitiesRetrived(newEntittes : List<String>) {
+        Log.i("AlertViewModel","entities size :${newEntittes.size}")
+        entities.value = newEntittes
     }
 
     override fun onCleared() {

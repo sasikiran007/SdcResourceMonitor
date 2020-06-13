@@ -54,3 +54,5 @@ data class Alert(
     var uuid: Long
 
 )
+
+data class radioEntity(val name : String, val isChecked : Boolean)

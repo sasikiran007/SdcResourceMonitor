@@ -38,7 +38,10 @@ interface AlertDao {
     @Query("SELECT * from alert WHERE uuid = :alertUuid")
     suspend fun getAlert(alertUuid : Long) :Alert
 
-    @Query("SELECT * from alert WHERE alert_section like :alertSection and alert_level like :alertLevel" )
-    suspend fun getAlerts(alertSection : String, alertLevel : String) : List<Alert>
+    @Query("SELECT * from alert WHERE alert_section like :alertSection and alert_level like :alertLevel and entity like :entity" )
+    suspend fun getAlerts(alertSection : String, alertLevel : String, entity : String) : List<Alert>
+
+    @Query("SELECT DISTINCT entity from alert WHERE alert_section like :alertSection and alert_level like :alertLevel" )
+    suspend fun getEntities(alertSection : String, alertLevel : String) : List<String>
 
 }
