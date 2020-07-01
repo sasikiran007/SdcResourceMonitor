@@ -130,21 +130,26 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
     private fun observeViewModel() {
         viewModel.entities.observe(viewLifecycleOwner, Observer { entities ->
             entities?.let {
+                Log.i(TAG,"show entities filter : $_showFilterGrid")
                 entityFilterAdapter.update(entities)
-                if (entities.isEmpty())
-                    setVisibility(hasAlert = true)
-                else if(entities.size == 1) {
-                    setVisibility(hasAlertList = true, hasEntity = false)
-                }else {
-                    setVisibility(hasAlertList = true, hasEntity = true)
+                when {
+                    entities.isEmpty() -> setVisibility(hasAlert = true,hasEntity =  _showFilterGrid)
+                    entities.size == 1 -> {
+                        setVisibility(hasAlertList = true, hasEntity = _showFilterGrid)
+                    }
+                    else -> {
+                        setVisibility(hasAlertList = true, hasEntity = true)
+                    }
                 }
 
             }
         })
         viewModel.alerts.observe(viewLifecycleOwner, Observer { alerts ->
             alerts?.let {
+
+                Log.i(TAG,"show alerts list : $_showFilterGrid")
                 if (alerts.isEmpty()) {
-                    setVisibility(hasAlert = true)
+                    setVisibility(hasAlert = true,hasEntity = _showFilterGrid)
                 } else {
                     setVisibility(hasAlertList = true,hasEntity = true)
                 }
@@ -152,11 +157,14 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
             }
         })
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-            if(!_showFilterGrid) setVisibility(hasProgress = isLoading)
-            else setVisibility(hasAlert = true,hasProgress = isLoading)
             Log.i(TAG,"show grid : $_showFilterGrid")
+            setVisibility(hasEntity = _showFilterGrid,hasProgress = true)
+//            if(!_showFilterGrid) setVisibility(hasProgress = isLoading)
+//            else setVisibility(hasAlert = true,hasProgress = isLoading)
+
         })
         viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
+            Log.i(TAG,"show error : $_showFilterGrid")
             setVisibility(hasError = hasError)
         })
     }
