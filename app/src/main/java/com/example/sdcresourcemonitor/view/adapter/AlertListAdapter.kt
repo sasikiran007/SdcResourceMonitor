@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.AlertItemBinding
 import com.example.sdcresourcemonitor.model.Alert
+import com.google.common.collect.ComparisonChain
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AlertListAdapter(val alerts : ArrayList<Alert>) : RecyclerView.Adapter<AlertListAdapter.AlertListViewHolder>() {
 
@@ -36,6 +39,7 @@ class AlertListAdapter(val alerts : ArrayList<Alert>) : RecyclerView.Adapter<Ale
     fun update(newAlerts : List<Alert>) {
         alerts.clear()
         alerts.addAll(newAlerts)
+        Collections.sort(alerts,Alert.comparator)
         notifyDataSetChanged()
     }
 }

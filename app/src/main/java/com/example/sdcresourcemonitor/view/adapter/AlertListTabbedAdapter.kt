@@ -69,8 +69,6 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
-
         viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
 
         alertListAdapter = AlertListAdapter(ArrayList())
