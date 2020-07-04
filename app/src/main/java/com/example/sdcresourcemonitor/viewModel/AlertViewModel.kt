@@ -61,7 +61,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
             dataRetrieved(dao.getAlerts(alertSection,alertLevel,entity))
             Log.i(TAG,"fetch from local database called")
             entitiesRetrived(dao.getEntities(alertSection,alertLevel))
-            Toast.makeText(getApplication(),"Alert data downloaded from local", Toast.LENGTH_LONG).show()
+//            Toast.makeText(getApplication(),"Alert data downloaded from local", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -74,13 +74,13 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
                 .subscribeWith(object  : DisposableSingleObserver<List<Alert>>() {
                     override fun onSuccess(t: List<Alert>) {
                         loadIntoLocalDatabase(t)
-                        Toast.makeText(getApplication(),"Yahoo, List downloaded", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(getApplication(),"Yahoo, List downloaded", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onError(e: Throwable) {
                         hasError.value = true
 //                        isLoading.value = false
-                        Toast.makeText(getApplication(),"Ayyoo, Error in loading List",Toast.LENGTH_LONG).show()
+//                        Toast.makeText(getApplication(),"Ayyoo, Error in loading List",Toast.LENGTH_LONG).show()
                     }
 
                 })
@@ -99,7 +99,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
             dataRetrieved(dao.getAlerts(alertSection,alertLevel,entity))
             Log.i(TAG,"loading data into database")
             entitiesRetrived(dao.getEntities(alertSection,alertLevel))
-            Toast.makeText(getApplication(),"Alert data downloaded from network", Toast.LENGTH_LONG).show()
+//            Toast.makeText(getApplication(),"Alert data downloaded from network", Toast.LENGTH_LONG).show()
         }
 
     }

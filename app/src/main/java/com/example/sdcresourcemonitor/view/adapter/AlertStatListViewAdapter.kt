@@ -83,12 +83,14 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
 
     override fun onClick(view: View) {
         var alertSection: String = view.tag.toString()
+        val title = "$alertSection Alerts"
+        val newTitle = title.capitalize()
         if (alertSection == "all") alertSection = "%%"
 
-        Toast.makeText(view.context, "Item clicked!!! $alertSection", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(view.context, "Item clicked!!! $alertSection", Toast.LENGTH_SHORT).show()
         Navigation.findNavController(view).navigate(
             AlertDashBoardDirections.actionAlertDashBoard2ToAlertListFragment2(
-                alertSection = alertSection
+                alertSection = alertSection , title = newTitle
             )
         )
 

@@ -57,8 +57,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
             val alerts = dao.getAll()
             if(alerts.isNotEmpty()) {
                 dataRetrieved(alerts)
-                Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT)                   .show()
             }else {
                 fetchFromNetwork()
             }
@@ -110,7 +109,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
                 newAlertStats[i].uuid = alertStatUuids[i]
             dataRetrieved(newAlertStats)            }
 
-        Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
             isLoading.value = false
             hasError.value = false
 

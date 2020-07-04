@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/alertListTabbedFragment2"
         android:name="com.example.sdcresourcemonitor.view.AlertListTabbedFragment"
-        android:label="AlertListTabbedFragment" >
+        android:label="{title}" >
         <action
             android:id="@+id/action_alertListTabbedFragment2_to_alertDashBoard2"
             app:destination="@id/alertDashBoard2" />
@@ -37,5 +37,8 @@
             android:name="alertSection"
             app:argType="string"
             android:defaultValue="%%" />
+        <argument
+            android:name="title"
+            app:argType="string"/>
     </fragment>
 </navigation>
