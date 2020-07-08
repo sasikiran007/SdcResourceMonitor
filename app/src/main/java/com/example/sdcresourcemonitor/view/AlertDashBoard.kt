@@ -14,13 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
+import com.example.sdcresourcemonitor.viewModel.AlertTrackerViewModel
+import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
 
 class AlertDashBoard : Fragment() {
     private val TAG = "AlertDashBoard"
 
-    private lateinit var viewModel: AlertStatViewModel
+//    private lateinit var viewModel: AlertStatViewModel
+    private val viewModel by lazy {
+        activity?.let { ViewModelProvider(it).get(AlertTrackerViewModel::class.java) }
+    }
+//    private lateinit var listViewModel : AlertViewModel
     val alertStatadapter =
         AlertStatListViewAdapter(
             ArrayList()
@@ -39,19 +45,18 @@ class AlertDashBoard : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
         Log.i(TAG,"onCreateView method called")
-
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
-//        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
+//        viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
+//        trackerViewModel = ViewModelProvider(this).get(AlertTrackerViewModel::class.java)
+//        listViewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+
 
         errorTextView.visibility = View.GONE
         recyclerView.visibility = View.GONE
@@ -61,7 +66,7 @@ class AlertDashBoard : Fragment() {
             errorTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
-            viewModel.refreshByPassLocal()
+            viewModel?.refreshStats()
             swipeTorefresh.isRefreshing = false
         }
 
@@ -70,49 +75,61 @@ class AlertDashBoard : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
         }
-
-        viewModel.refresh()
-
+        viewModel?.refreshStats()
         observeViewModel()
     }
 
+
+
     private fun observeViewModel() {
         Log.i(TAG, "Observing viewmodel")
-        viewModel.alertStats.observe(viewLifecycleOwner, Observer { alertStats ->
+        viewModel?.alertStats?.observe(viewLifecycleOwner, Observer { alertStats ->
             alertStats?.let {
-                errorTextView.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
-                Log.i(TAG, alertStats.size.toString())
+                setVisibilities(error = false, loading = false, data = true)
                 alertStatadapter.updateAlertStats(alertStats)
             }
 
         })
 
-        viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
+        viewModel?.hasError?.observe(viewLifecycleOwner, Observer { hasError ->
             hasError?.let {
                 if (hasError) {
-                    errorTextView.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                    progressBar.visibility = View.GONE
+                    setVisibilities(error = true, loading = false, data = false)
                     Log.i(TAG, "Error in loading")
                 }
             }
         })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+        viewModel?.isLoading?.observe(viewLifecycleOwner, Observer { isLoading ->
             isLoading?.let {
                 if (isLoading) {
-                    errorTextView.visibility = View.GONE
-                    recyclerView.visibility = View.GONE
-                    progressBar.visibility = View.VISIBLE
-                    Log.i(TAG, "its loading")
+                    setVisibilities(error = false, loading = true, data = false)
                 } else {
                     progressBar.visibility = View.GONE
                     Log.i(TAG, "Not Loading")
                 }
             }
         })
+    }
+
+    private fun setVisibilities(error : Boolean,loading : Boolean,data : Boolean) {
+        if(error) {
+            errorTextView.visibility = View.VISIBLE
+        }else {
+            errorTextView.visibility = View.GONE
+        }
+
+        if(loading) {
+            progressBar.visibility = View.VISIBLE
+        }else {
+            progressBar.visibility = View.GONE
+        }
+
+        if(data) {
+            recyclerView.visibility = View.VISIBLE
+        }else {
+            recyclerView.visibility = View.GONE
+        }
     }
 
 

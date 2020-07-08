@@ -11,9 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.PagerAdapter.POSITION_NONE
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.view.listener.RadioButtonClickListener
+import com.example.sdcresourcemonitor.viewModel.AlertTrackerViewModel
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import kotlinx.android.synthetic.main.fragment_alert_list.*
 
@@ -30,11 +32,16 @@ class AlertListTabbedAdapter(
 ) :
     FragmentStateAdapter(fragment) {
 
+    val TAG = "AlertListTabbedAdapter"
+
     override fun getItemCount(): Int {
         return itemsCount
     }
 
+
     override fun createFragment(position: Int): Fragment {
+        Log.i(TAG,"3. Adapter is created")
+        Log.i(TAG,"3a. creation of fragment called "+alertSection+","+position+","+entity)
         val fragment = SelectedAlertsFragment()
         fragment.arguments = Bundle().apply {
             putString(ARG_OBJECT1, alertSection)
@@ -47,13 +54,19 @@ class AlertListTabbedAdapter(
 
 class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
+
+
     lateinit var alertListAdapter: AlertListAdapter
     lateinit var entityFilterAdapter: EntityFilterAdapter
-    lateinit var viewModel: AlertViewModel
+    lateinit var viewModel: AlertTrackerViewModel
+//    val viewModel by lazy {
+//        activity?.let { ViewModelProvider(it).get(AlertTrackerViewModel::class.java)}
+//    }
     private var _alertSection: String = "%%"
     private var _alertLevel = "%%"
     private var _entity = "%%"
     private val TAG = "SelectedAlertsFragment"
+
 
     private var _showFilterGrid = false
 
@@ -64,12 +77,14 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i(TAG,"4. onCreateView is called")
         return inflater.inflate(R.layout.fragment_alert_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.i(TAG,"5. onViewCreated is called")
 
-        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AlertTrackerViewModel::class.java)
 
         alertListAdapter = AlertListAdapter(ArrayList())
 
@@ -95,16 +110,16 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
         Log.i(TAG, "$_alertLevel , $_alertSection, $_entity")
 
-        viewModel.isLoading.value = true
+        viewModel?.isLoadingAlerts?.value = true
 
         _showFilterGrid = false
-        viewModel.refresh(_alertSection, _alertLevel, _entity)
+        viewModel?.refreshAlertsFromLocal(_alertSection, _alertLevel, _entity)
 
         swipeRefreshList.setOnRefreshListener {
             _showFilterGrid = false
             swipeRefreshList.isRefreshing = false
-            viewModel.isLoading.value = true
-            viewModel.refreshByPassLocal(_alertSection, _alertLevel, _entity)
+            viewModel?.isLoadingAlerts?.value = true
+            viewModel?.refreshAlerts(_alertSection, _alertLevel, _entity)
         }
 
         observeViewModel()
@@ -124,11 +139,10 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
     }
 
-
     private fun observeViewModel() {
-        viewModel.entities.observe(viewLifecycleOwner, Observer { entities ->
+        viewModel?.entities?.observe(viewLifecycleOwner, Observer { entities ->
             entities?.let {
-                Log.i(TAG,"show entities filter : $_showFilterGrid")
+//                Log.i(TAG,"show entities filter : $_showFilterGrid")
                 entityFilterAdapter.update(entities)
                 when {
                     entities.isEmpty() -> setVisibility(hasAlert = true,hasEntity =  _showFilterGrid)
@@ -142,10 +156,10 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
 
             }
         })
-        viewModel.alerts.observe(viewLifecycleOwner, Observer { alerts ->
+        viewModel?.alerts?.observe(viewLifecycleOwner, Observer { alerts ->
             alerts?.let {
 
-                Log.i(TAG,"show alerts list : $_showFilterGrid")
+//                Log.i(TAG,"show alerts list : $_showFilterGrid")
                 if (alerts.isEmpty()) {
                     setVisibility(hasAlert = true,hasEntity = _showFilterGrid)
                 } else {
@@ -154,15 +168,15 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
                 alertListAdapter.update(alerts)
             }
         })
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-            Log.i(TAG,"show grid : $_showFilterGrid")
+        viewModel?.isLoadingAlerts?.observe(viewLifecycleOwner, Observer { isLoading ->
+//            Log.i(TAG,"show grid : $_showFilterGrid")
             setVisibility(hasEntity = _showFilterGrid,hasProgress = true)
 //            if(!_showFilterGrid) setVisibility(hasProgress = isLoading)
 //            else setVisibility(hasAlert = true,hasProgress = isLoading)
 
         })
-        viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
-            Log.i(TAG,"show error : $_showFilterGrid")
+        viewModel?.hasErrorAlerts?.observe(viewLifecycleOwner, Observer { hasError ->
+//            Log.i(TAG,"show error : $_showFilterGrid")
             setVisibility(hasError = hasError)
         })
     }
@@ -180,11 +194,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
         if (hasProgress) progressBarList.visibility = View.VISIBLE else progressBarList.visibility = View.GONE
         if (hasEntity) filterGridRecyclerView.visibility = View.VISIBLE else filterGridRecyclerView.visibility = View.GONE
 
-        Log.i(
-            TAG,
-            "noAlerts:${noAlerts.visibility}, alerts:${alertListRecyclerView.visibility}, hasError:${errorTextView.visibility}," +
-                    "progress:${progressBarList.visibility}, filter:${filterGridRecyclerView.visibility}"
-        )
+//        Log.i(TAG,"noAlerts:${noAlerts.visibility}, alerts:${alertListRecyclerView.visibility}, hasError:${errorTextView.visibility}," +"progress:${progressBarList.visibility}, filter:${filterGridRecyclerView.visibility}"        )
 
     }
 
@@ -195,7 +205,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener{
             ENTITY_FILTER_SELECTED_POSITION = position
             _entity = if(name == "All") "%%" else name
             _showFilterGrid = true
-            viewModel.refresh(_alertSection, _alertLevel, _entity)
+            viewModel?.refreshAlertsFromLocal(_alertSection, _alertLevel, _entity)
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.sdcresourcemonitor.model.network
 
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
+import com.example.sdcresourcemonitor.model.AlertTracker
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -34,6 +35,10 @@ class AlertApiService {
 
     fun getAllAlerts() : Single<List<Alert>> {
         return api.getAllAlerts()
+    }
+
+    fun getTrackers() : Single<List<AlertTracker>> {
+        return  api.getAlertTrackers()
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
+import com.example.sdcresourcemonitor.model.AlertTracker
 
 @Dao
 interface AlertStatDao {
@@ -41,7 +42,26 @@ interface AlertDao {
     @Query("SELECT * from alert WHERE alert_section like :alertSection and alert_level like :alertLevel and entity like :entity" )
     suspend fun getAlerts(alertSection : String, alertLevel : String, entity : String) : List<Alert>
 
+    @Query("SELECT * from alert WHERE alert_section like :alertSection and alert_level like :alertLevel and entity like :entity and script_name like :scriptName" )
+    suspend fun getAlerts(alertSection : String, alertLevel : String, entity : String, scriptName: String) : List<Alert>
+
     @Query("SELECT DISTINCT entity from alert WHERE alert_section like :alertSection and alert_level like :alertLevel" )
     suspend fun getEntities(alertSection : String, alertLevel : String) : List<String>
+
+}
+
+@Dao
+interface AlertTrackerDao {
+    @Query("SELECT * from alert_tracker")
+    suspend fun getAll() : List<AlertTracker>
+
+    @Query("SELECT * from alert_tracker where script_name like :scriptName")
+    suspend fun getTrackerNumber(scriptName : String) : AlertTracker
+
+    @Query("DELETE from alert_tracker")
+    suspend fun deleteAll()
+
+    @Insert
+    suspend fun insertAll(vararg alertTrackers: AlertTracker) :List<Long>
 
 }

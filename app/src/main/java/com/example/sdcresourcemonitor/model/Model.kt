@@ -3,9 +3,23 @@ package com.example.sdcresourcemonitor.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.common.collect.ComparisonChain
 import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
+
+@Entity(tableName = "alert_tracker")
+data class AlertTracker(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uuid")
+    var uuid: Long,
+
+    @ColumnInfo(name = "script_name")
+    val scriptName: String,
+
+    @ColumnInfo(name = "tracker_number")
+    val trackerNumber : String,
+
+    val period : Int
+)
 
 @Entity(tableName = "alert_stat")
 data class AlertStat

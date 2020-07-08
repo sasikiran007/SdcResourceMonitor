@@ -10,6 +10,7 @@ import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.local.AlertDatabase
 import com.example.sdcresourcemonitor.model.network.AlertApiService
+import com.example.sdcresourcemonitor.util.NotificationHelper
 import com.example.sdcresourcemonitor.util.REFRESH_TIME
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -49,7 +50,6 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
         fetchFromNetwork()
     }
 
-
     private fun fetchFromLocal() {
         isLoading.value = true
         launch {
@@ -64,8 +64,6 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
         }
 
     }
-
-
 
     private fun dataRetrieved(newAlertStats: List<AlertStat>) {
         Log.i(TAG, "Posting value into viewmodel data")
@@ -85,6 +83,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
                 override fun onSuccess(t: List<AlertStat>) {
                     Log.i(TAG, "Data from NW is success and loading data into database")
                     loadIntoLocalDatabase(t)
+                    NotificationHelper(getApplication()).createNotification()
                 }
 
                 override fun onError(e: Throwable) {
