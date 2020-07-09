@@ -39,25 +39,26 @@ class SharedpreferenceHelper {
 
     fun getUpdatedTimeList() : Long? =  pref?.getLong(PREF_TIME_LIST,0)
 
-    fun saveUpdateTrackerTimes(time : Map<String,Long>) {
+    fun saveUpdateTrackerTimes(time : Map<String,String>) {
         val jasonObject = JSONObject(time)
         pref?.edit()?.putString(PREF_TRACKER_TIME,jasonObject.toString())?.apply()
     }
-    fun saveUpdateTrackerPeriods(time : Map<String,Long>) {
+    fun saveUpdateTrackerPeriods(time : Map<String,String>) {
         val jasonObject = JSONObject(time)
         pref?.edit()?.putString(PREF_TRACKER_PERIOD,jasonObject.toString())?.apply()
     }
 
-    fun getUpdatedTrackerTimes() {
-        val timeMap = HashMap<String,Long>()
+    fun getUpdatedTrackerTimes() : HashMap<String,String> {
+        val timeMap : HashMap<String,String> = HashMap()
         val outString = pref?.getString(PREF_TRACKER_TIME,"")
-        val jsonObject = JSONObject(outString)
+        val jsonObject = JSONObject(outString!!)
         val keys = jsonObject.keys()
         while(keys.hasNext()) {
-            val key = keys.next()
-            val value : Long = jsonObject.get(key) as Long
+            val key = keys.next().toString()
+            val value :String  = jsonObject.get(key).toString()
             timeMap[key] = value
         }
+        return timeMap
     }
 
 }

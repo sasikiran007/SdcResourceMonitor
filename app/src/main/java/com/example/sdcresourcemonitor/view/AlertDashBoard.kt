@@ -6,28 +6,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sdcresourcemonitor.R
+import com.example.sdcresourcemonitor.model.AlertTracker
+import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
-import com.example.sdcresourcemonitor.viewModel.AlertTrackerViewModel
-import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
 
 class AlertDashBoard : Fragment() {
     private val TAG = "AlertDashBoard"
 
-//    private lateinit var viewModel: AlertStatViewModel
-    private val viewModel by lazy {
-        activity?.let { ViewModelProvider(it).get(AlertTrackerViewModel::class.java) }
-    }
-//    private lateinit var listViewModel : AlertViewModel
-    val alertStatadapter =
+    private lateinit var viewModel: AlertStatViewModel
+    private lateinit var prefHelper: SharedpreferenceHelper
+
+    private val trackerTimes = hashMapOf<String,String>()
+
+
+    private val alertStateAdapter =
         AlertStatListViewAdapter(
             ArrayList()
         )
@@ -45,18 +47,20 @@ class AlertDashBoard : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
         Log.i(TAG,"onCreateView method called")
+
+        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
+//        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
-//        trackerViewModel = ViewModelProvider(this).get(AlertTrackerViewModel::class.java)
-//        listViewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
-
+        viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
+        prefHelper = SharedpreferenceHelper.invoke(requireContext())
 
         errorTextView.visibility = View.GONE
         recyclerView.visibility = View.GONE
@@ -66,44 +70,63 @@ class AlertDashBoard : Fragment() {
             errorTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
-            viewModel?.refreshStats()
+            viewModel.refreshTrackers()
             swipeTorefresh.isRefreshing = false
         }
 
         recyclerView.apply {
-            adapter = alertStatadapter
+            adapter = alertStateAdapter
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
         }
-        viewModel?.refreshStats()
+
+        viewModel.refreshTrackers()
+
         observeViewModel()
     }
 
-
-
     private fun observeViewModel() {
         Log.i(TAG, "Observing viewmodel")
-        viewModel?.alertStats?.observe(viewLifecycleOwner, Observer { alertStats ->
+        viewModel.trackers.observe(viewLifecycleOwner, Observer { trackers->
+            trackers?.let {
+                Log.i(TAG,"trackers downloaded")
+                for(tracker in trackers) {
+                    trackerTimes[tracker.scriptName] = tracker.trackerNumber
+                }
+                Log.i(TAG,"refreshing data ")
+                viewModel.refreshData(isDataFresh(trackers))
+            }
+        })
+        viewModel.alertStats.observe(viewLifecycleOwner, Observer { alertStats ->
             alertStats?.let {
-                setVisibilities(error = false, loading = false, data = true)
-                alertStatadapter.updateAlertStats(alertStats)
+                errorTextView.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                progressBar.visibility = View.GONE
+                Log.i(TAG, alertStats.size.toString())
+                alertStateAdapter.updateAlertStats(alertStats)
+//                prefHelper.saveUpdateTrackerTimes(trackerTimes)
             }
 
         })
 
-        viewModel?.hasError?.observe(viewLifecycleOwner, Observer { hasError ->
+        viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
             hasError?.let {
                 if (hasError) {
-                    setVisibilities(error = true, loading = false, data = false)
+                    errorTextView.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                    progressBar.visibility = View.GONE
                     Log.i(TAG, "Error in loading")
                 }
             }
         })
 
-        viewModel?.isLoading?.observe(viewLifecycleOwner, Observer { isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             isLoading?.let {
                 if (isLoading) {
-                    setVisibilities(error = false, loading = true, data = false)
+                    errorTextView.visibility = View.GONE
+                    recyclerView.visibility = View.GONE
+                    progressBar.visibility = View.VISIBLE
+                    Log.i(TAG, "its loading")
                 } else {
                     progressBar.visibility = View.GONE
                     Log.i(TAG, "Not Loading")
@@ -112,25 +135,25 @@ class AlertDashBoard : Fragment() {
         })
     }
 
-    private fun setVisibilities(error : Boolean,loading : Boolean,data : Boolean) {
-        if(error) {
-            errorTextView.visibility = View.VISIBLE
-        }else {
-            errorTextView.visibility = View.GONE
+    private fun isDataFresh(trackers : List<AlertTracker>) : Boolean{
+        val hashMap : HashMap<String,String> = prefHelper.getUpdatedTrackerTimes()
+        var isFresh = true
+        for(tracker in trackers) {
+            Log.i(TAG,"hashMap size"+hashMap.size)
+            val scriptName = tracker.scriptName
+            val trackerNumber = tracker.trackerNumber
+            Log.i(TAG, "$scriptName,$trackerNumber," +hashMap["blue"])
+            Toast.makeText(context,"$trackerNumber,"+hashMap["blue"],Toast.LENGTH_LONG).show()
+            if(!(hashMap.containsKey(scriptName) && hashMap[scriptName] == trackerNumber)) {
+                isFresh = false
+                break
+            }
         }
-
-        if(loading) {
-            progressBar.visibility = View.VISIBLE
-        }else {
-            progressBar.visibility = View.GONE
-        }
-
-        if(data) {
-            recyclerView.visibility = View.VISIBLE
-        }else {
-            recyclerView.visibility = View.GONE
-        }
+        Log.i(TAG,"retruning isFresh :"+isFresh)
+        return isFresh
     }
+
+
 
 
 }

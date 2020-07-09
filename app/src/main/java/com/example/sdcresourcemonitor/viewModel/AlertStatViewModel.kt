@@ -1,49 +1,92 @@
 package com.example.sdcresourcemonitor.viewModel
 
 import android.app.Application
-import android.text.BoringLayout
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
+import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.model.local.AlertDatabase
 import com.example.sdcresourcemonitor.model.network.AlertApiService
 import com.example.sdcresourcemonitor.util.NotificationHelper
-import com.example.sdcresourcemonitor.util.REFRESH_TIME
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
+
 
 class AlertStatViewModel(application: Application) : BaseViewModel(application) {
 
     private val TAG = "AlertStatViewModel"
-//    private val REFRESH_THRESHOLD = 10 * 1000 * 1000 * 1000L
+
+    //    private val REFRESH_THRESHOLD = 10 * 1000 * 1000 * 1000L
+    private val REFRESH_TIME = 10 * 1000 * 1000 * 1000L
     private val prefsHelper = SharedpreferenceHelper.invoke(getApplication())
 
     private val alertApiService = AlertApiService()
     private val disposable = CompositeDisposable()
     private val database = AlertDatabase.invoke(getApplication())
 
+
     val alertStats = MutableLiveData<List<AlertStat>>()
     val isLoading = MutableLiveData<Boolean>()
     val hasError = MutableLiveData<Boolean>()
+    val trackers = MutableLiveData<List<AlertTracker>>()
 
-    fun refresh() {
-        Log.i(TAG, " refresh method called")
-        val updateTime = prefsHelper.getUpdatedTime()
-        if (updateTime != null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME ) {
+    fun refreshTrackers() {
+        Log.i(TAG, "Refresh trackers method is called")
+        isLoading.value = true
+        val d1 = alertApiService.getTrackers()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableSingleObserver<List<AlertTracker>>() {
+                override fun onSuccess(t: List<AlertTracker>) {
+                    trackers.value = t
+                }
 
-            Log.i(TAG, " Refreshing from local : ${updateTime.div(1000000000)} :${REFRESH_TIME.div(1000000000)} : ${System.nanoTime().div(1000000000) - updateTime.div(1000000000)} ")
-            fetchFromLocal()
-        } else {
-            Log.i(TAG, "Refreshing from network")
-            fetchFromNetwork()
-        }
+                override fun onError(e: Throwable) {
+                    hasError.value = true
+                    isLoading.value = false
+                }
+
+            })
+        disposable.add(d1)
+
+
+
+//        val d1 = alertApiService.getTrackers()
+//            .subscribeOn(Schedulers.newThread())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribeWith(object : DisposableSingleObserver<List<AlertTracker>>() {
+//                override fun onSuccess(t: List<AlertTracker>) {
+//                    trackers.value = t
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    hasError.value = true
+//                }
+//
+//            })
+//        disposable.add(d1)
+
+
+//        val updateTime = prefsHelper.getUpdatedTime()
+//        if (updateTime != null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME ) {
+//
+//            Log.i(TAG, " Refreshing from local : ${updateTime.div(1000000000)} :${REFRESH_TIME.div(1000000000)} : ${System.nanoTime().div(1000000000) - updateTime.div(1000000000)} ")
+//            fetchFromLocal()
+//        } else {
+//            Log.i(TAG, "Refreshing from network")
+//            fetchFromNetwork()
+//        }
+    }
+
+    fun refreshData(isFresh: Boolean) {
+        if (isFresh) fetchFromLocal()
+        else fetchFromNetwork()
     }
 
     fun refreshByPassLocal() {
@@ -55,10 +98,11 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
         launch {
             val dao = database.getAlertStatDao()
             val alerts = dao.getAll()
-            if(alerts.isNotEmpty()) {
+            if (alerts.isNotEmpty()) {
                 dataRetrieved(alerts)
-//                Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT)                   .show()
-            }else {
+                Toast.makeText(getApplication(), "Loaded data from local", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
                 fetchFromNetwork()
             }
         }
@@ -74,6 +118,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
     }
 
     private fun fetchFromNetwork() {
+        RxJavaPlugins.setErrorHandler { throwable: Throwable? -> }
         Log.i(TAG, " fetchNetwork  method called")
         isLoading.value = true
         val d1 = alertApiService.getAllAlertStat()
@@ -106,16 +151,16 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
             Log.i(TAG, "Alert stat Data loaded into database")
             for (i in alertStatUuids.indices) {
                 newAlertStats[i].uuid = alertStatUuids[i]
-            dataRetrieved(newAlertStats)            }
+                dataRetrieved(newAlertStats)
+            }
 
-//        Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
+            Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
             isLoading.value = false
             hasError.value = false
 
         }
 
     }
-
 
     override fun onCleared() {
         super.onCleared()

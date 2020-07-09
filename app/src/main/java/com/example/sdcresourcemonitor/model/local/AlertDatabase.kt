@@ -8,14 +8,12 @@ import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
 
-@Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class),version = 2 )
+@Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class),version = 2)
 abstract class AlertDatabase : RoomDatabase() {
 
     abstract fun getAlertStatDao() : AlertStatDao
 
     abstract fun getAlertDao() : AlertDao
-
-    abstract fun getAlertTrackerDao() : AlertTrackerDao
 
     companion object {
         @Volatile
@@ -27,8 +25,7 @@ abstract class AlertDatabase : RoomDatabase() {
                 instance = it
             }
         }
-        private fun buildDataBse(context: Context)  = Room.databaseBuilder(context,AlertDatabase::class.java,"alertdatabae")
-            .fallbackToDestructiveMigration().build()
+        private fun buildDataBse(context: Context)  = Room.databaseBuilder(context,AlertDatabase::class.java,"alertdatabae").fallbackToDestructiveMigration().build()
 
     }
 

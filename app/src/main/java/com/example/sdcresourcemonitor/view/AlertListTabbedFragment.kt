@@ -27,6 +27,7 @@ class AlertListTabbedFragment : Fragment() {
     private var _alertSection = "%%"
     private val TAG = "AlertListTabbedFragment"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -35,23 +36,24 @@ class AlertListTabbedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG,"1. onCreateView called")
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_alert_list_tabbed, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
         arguments?.let {
             _alertSection = AlertListTabbedFragmentArgs.fromBundle(it).alertSection
             Log.i(TAG, _alertSection)
         }
-        Log.i(TAG,"2. onViewCreated is called")
 
-        alertListTabbedAdapter = AlertListTabbedAdapter(this, 4, _alertSection,"%%")
+
+        alertListTabbedAdapter = AlertListTabbedAdapter(this, 3, _alertSection,"%%")
         viewPager = view_pager
         viewPager.isUserInputEnabled = false
         viewPager.adapter = alertListTabbedAdapter
-        alertListTabbedAdapter.notifyDataSetChanged()
+//        val tabLayout = view.findViewById(R.id.tabs)
         TabLayoutMediator(tabs, viewPager) { tab, position ->
 
             tab.text = when (position) {
@@ -61,6 +63,7 @@ class AlertListTabbedFragment : Fragment() {
                 else -> "All"
             }
         }.attach()
+
     }
 
 
