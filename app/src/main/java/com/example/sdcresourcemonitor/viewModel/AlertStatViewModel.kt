@@ -22,10 +22,6 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
 
     private val TAG = "AlertStatViewModel"
 
-    //    private val REFRESH_THRESHOLD = 10 * 1000 * 1000 * 1000L
-    private val REFRESH_TIME = 10 * 1000 * 1000 * 1000L
-    private val prefsHelper = SharedpreferenceHelper.invoke(getApplication())
-
     private val alertApiService = AlertApiService()
     private val disposable = CompositeDisposable()
     private val database = AlertDatabase.invoke(getApplication())
@@ -54,43 +50,11 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
 
             })
         disposable.add(d1)
-
-
-
-//        val d1 = alertApiService.getTrackers()
-//            .subscribeOn(Schedulers.newThread())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribeWith(object : DisposableSingleObserver<List<AlertTracker>>() {
-//                override fun onSuccess(t: List<AlertTracker>) {
-//                    trackers.value = t
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                    hasError.value = true
-//                }
-//
-//            })
-//        disposable.add(d1)
-
-
-//        val updateTime = prefsHelper.getUpdatedTime()
-//        if (updateTime != null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME ) {
-//
-//            Log.i(TAG, " Refreshing from local : ${updateTime.div(1000000000)} :${REFRESH_TIME.div(1000000000)} : ${System.nanoTime().div(1000000000) - updateTime.div(1000000000)} ")
-//            fetchFromLocal()
-//        } else {
-//            Log.i(TAG, "Refreshing from network")
-//            fetchFromNetwork()
-//        }
     }
 
     fun refreshData(isFresh: Boolean) {
         if (isFresh) fetchFromLocal()
         else fetchFromNetwork()
-    }
-
-    fun refreshByPassLocal() {
-        fetchFromNetwork()
     }
 
     private fun fetchFromLocal() {
@@ -106,15 +70,6 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
                 fetchFromNetwork()
             }
         }
-
-    }
-
-    private fun dataRetrieved(newAlertStats: List<AlertStat>) {
-        Log.i(TAG, "Posting value into viewmodel data")
-        alertStats.value = newAlertStats
-        isLoading.value = false
-        hasError.value = false
-
     }
 
     private fun fetchFromNetwork() {
@@ -126,9 +81,9 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<AlertStat>>() {
                 override fun onSuccess(t: List<AlertStat>) {
-                    Log.i(TAG, "Data from NW is success and loading data into database")
+//                    Log.i(TAG, "Data from NW is success and loading data into database")
                     loadIntoLocalDatabase(t)
-                    NotificationHelper(getApplication()).createNotification()
+//                    NotificationHelper(getApplication()).createNotification()
                 }
 
                 override fun onError(e: Throwable) {
@@ -147,18 +102,25 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
             val dao = database.getAlertStatDao()
             dao.deleteAll()
             val alertStatUuids = dao.insertAll(*newAlertStats.toTypedArray())
-            prefsHelper.saveUpdateTime(System.nanoTime())
             Log.i(TAG, "Alert stat Data loaded into database")
             for (i in alertStatUuids.indices) {
                 newAlertStats[i].uuid = alertStatUuids[i]
-                dataRetrieved(newAlertStats)
             }
+            dataRetrieved(newAlertStats)
 
-            Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
-            isLoading.value = false
-            hasError.value = false
+//            Toast.makeText(getApplication(), "Data loading from network", Toast.LENGTH_SHORT).show()
+//            isLoading.value = false
+//            hasError.value = false
 
         }
+
+    }
+
+    private fun dataRetrieved(newAlertStats: List<AlertStat>) {
+        Log.i(TAG, "Posting value into viewmodel data")
+        alertStats.value = newAlertStats
+        isLoading.value = false
+        hasError.value = false
 
     }
 

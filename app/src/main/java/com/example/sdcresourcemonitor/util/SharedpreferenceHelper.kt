@@ -27,22 +27,11 @@ class SharedpreferenceHelper {
         }
     }
 
-    fun saveUpdateTime(time : Long) {
-        pref?.edit()?.putLong(PREF_TIME,time)?.apply()
-    }
-
-    fun getUpdatedTime() : Long? =  pref?.getLong(PREF_TIME,0)
-
-    fun saveUpdateTimeList(time : Long) {
-        pref?.edit()?.putLong(PREF_TIME_LIST,time)?.apply()
-    }
-
-    fun getUpdatedTimeList() : Long? =  pref?.getLong(PREF_TIME_LIST,0)
-
     fun saveUpdateTrackerTimes(time : Map<String,String>) {
         val jasonObject = JSONObject(time)
         pref?.edit()?.putString(PREF_TRACKER_TIME,jasonObject.toString())?.apply()
     }
+
     fun saveUpdateTrackerPeriods(time : Map<String,String>) {
         val jasonObject = JSONObject(time)
         pref?.edit()?.putString(PREF_TRACKER_PERIOD,jasonObject.toString())?.apply()

@@ -238,7 +238,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
             ENTITY_FILTER_SELECTED_POSITION = position
             _entity = if (name == "All") "%%" else name
             _showFilterGrid = true
-            viewModel.refreshTrackers(_alertSection, _alertLevel, _entity)
+            viewModel.refreshFromLocal(_alertSection, _alertLevel, _entity)
         }
     }
 

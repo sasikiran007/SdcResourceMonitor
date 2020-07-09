@@ -36,7 +36,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
 
     private val alertApi = AlertApiService()
     private val disposable = CompositeDisposable()
-    private val prefHelper = SharedpreferenceHelper.invoke(getApplication())
+//    private val prefHelper = SharedpreferenceHelper.invoke(getApplication())
     private val database = AlertDatabase.invoke(application)
 
     fun refreshTrackers(newAlertSection : String, newAlertLevel : String, newEntity : String) {
@@ -61,26 +61,20 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
 
             })
         disposable.add(d1)
-//
-//        val updateTime = prefHelper.getUpdatedTimeList()
-//        if( updateTime!= null && updateTime != 0L && (System.nanoTime() - updateTime) < REFRESH_TIME)  {
-//            fetchFromLocal()
-//        }else {
-//            fetchFromNetwork()
-//        }
     }
 
-    fun refreshByPassLocal(newAlertSection : String, newAlertLevel : String, newEntity : String) {
+    fun refreshFromLocal(newAlertSection : String, newAlertLevel : String, newEntity : String) {
         alertSection = newAlertSection
         alertLevel = newAlertLevel
         entity = newEntity
-        fetchFromNetwork()
+        fetchFromLocal()
     }
 
     fun refreshData(isLocalDataValid : Boolean) {
         if(isLocalDataValid) fetchFromLocal()
         else fetchFromNetwork()
     }
+
     private fun fetchFromLocal() {
         isLoading.value = true
         launch {
@@ -122,7 +116,6 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
             for(i in alertUuids.indices) {
                 alerts[i].uuid = alertUuids[i]
             }
-//            prefHelper.saveUpdateTimeList(System.nanoTime())
             dataRetrieved(dao.getAlerts(alertSection,alertLevel,entity))
             Log.i(TAG,"loading data into database")
             entitiesRetrieved(dao.getEntities(alertSection,alertLevel))

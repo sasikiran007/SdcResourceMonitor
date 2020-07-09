@@ -86,7 +86,9 @@ class AlertDashBoard : Fragment() {
     }
 
     private fun observeViewModel() {
+
         Log.i(TAG, "Observing viewmodel")
+
         viewModel.trackers.observe(viewLifecycleOwner, Observer { trackers->
             trackers?.let {
                 Log.i(TAG,"trackers downloaded")
@@ -94,9 +96,10 @@ class AlertDashBoard : Fragment() {
                     trackerTimes[tracker.scriptName] = tracker.trackerNumber
                 }
                 Log.i(TAG,"refreshing data ")
-                viewModel.refreshData(isDataFresh(trackers))
+                viewModel.refreshData(checkLocalData(trackers))
             }
         })
+
         viewModel.alertStats.observe(viewLifecycleOwner, Observer { alertStats ->
             alertStats?.let {
                 errorTextView.visibility = View.GONE
@@ -104,7 +107,6 @@ class AlertDashBoard : Fragment() {
                 progressBar.visibility = View.GONE
                 Log.i(TAG, alertStats.size.toString())
                 alertStateAdapter.updateAlertStats(alertStats)
-//                prefHelper.saveUpdateTrackerTimes(trackerTimes)
             }
 
         })
@@ -135,7 +137,7 @@ class AlertDashBoard : Fragment() {
         })
     }
 
-    private fun isDataFresh(trackers : List<AlertTracker>) : Boolean{
+    private fun checkLocalData(trackers : List<AlertTracker>) : Boolean{
         val hashMap : HashMap<String,String> = prefHelper.getUpdatedTrackerTimes()
         var isFresh = true
         for(tracker in trackers) {
