@@ -12,10 +12,11 @@ import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.AlertStatHeaderItemBinding
 import com.example.sdcresourcemonitor.databinding.AlertStatItemBinding
 import com.example.sdcresourcemonitor.model.AlertStat
+import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.view.AlertDashBoardDirections
 import com.example.sdcresourcemonitor.view.listener.ViewOnClickListener
 
-class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
+class AlertStatListViewAdapter(private val alertStats: ArrayList<AlertStat>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     ViewOnClickListener {
 
@@ -63,12 +64,13 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
     override fun getItemCount() = alertStats.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        val alertStat = alertStats[position]
         if (holder is ItemViewHolder) {
-            holder.view.alertStat = alertStats[position]
+            val alertStat = alertStats[position]
+            holder.view.alertStat = alertStat
             holder.view.listener = this
         } else {
             (holder as HeadViewHolder).view.alertStat = alertStats[position]
+
             holder.view.listener = this
         }
     }
@@ -90,7 +92,7 @@ class AlertStatListViewAdapter(val alertStats: ArrayList<AlertStat>) :
 //        Toast.makeText(view.context, "Item clicked!!! $alertSection", Toast.LENGTH_SHORT).show()
         Navigation.findNavController(view).navigate(
             AlertDashBoardDirections.actionAlertDashBoard2ToAlertListFragment2(
-                alertSection = alertSection , title = newTitle
+                alertSection = alertSection, title = newTitle
             )
         )
 

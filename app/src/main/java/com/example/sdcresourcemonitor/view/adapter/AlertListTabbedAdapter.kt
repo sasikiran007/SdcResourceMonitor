@@ -143,6 +143,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
             }
 
         })
+
         viewModel.entities.observe(viewLifecycleOwner, Observer { entities ->
             entities?.let {
                 Log.i(TAG, "show entities filter : $_showFilterGrid")
@@ -162,6 +163,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
 
             }
         })
+
         viewModel.alerts.observe(viewLifecycleOwner, Observer { alerts ->
             alerts?.let {
 
@@ -175,6 +177,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
                 prefHelper.saveUpdateTrackerTimes(trackerTimes)
             }
         })
+
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             Log.i(TAG, "show grid : $_showFilterGrid")
             setVisibility(hasEntity = _showFilterGrid, hasProgress = true)
@@ -182,6 +185,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
 //            else setVisibility(hasAlert = true,hasProgress = isLoading)
 
         })
+
         viewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
             Log.i(TAG, "show error : $_showFilterGrid")
             setVisibility(hasError = hasError)

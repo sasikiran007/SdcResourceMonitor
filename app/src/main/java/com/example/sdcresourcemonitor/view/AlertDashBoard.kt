@@ -17,17 +17,17 @@ import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
+import com.example.sdcresourcemonitor.viewModel.AlertViewModel
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
 
 class AlertDashBoard : Fragment() {
+
     private val TAG = "AlertDashBoard"
-
     private lateinit var viewModel: AlertStatViewModel
+    private lateinit var alertViewmodel : AlertViewModel
     private lateinit var prefHelper: SharedpreferenceHelper
-
     private val trackerTimes = hashMapOf<String,String>()
-
 
     private val alertStateAdapter =
         AlertStatListViewAdapter(
@@ -40,26 +40,21 @@ class AlertDashBoard : Fragment() {
         Log.i(TAG,"onCreate method called")
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-
         Log.i(TAG,"onCreateView method called")
-
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
-//        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-        return view
+        return  inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
+        alertViewmodel = ViewModelProvider(this).get(AlertViewModel::class.java)
         prefHelper = SharedpreferenceHelper.invoke(requireContext())
 
         errorTextView.visibility = View.GONE
@@ -89,6 +84,14 @@ class AlertDashBoard : Fragment() {
 
         Log.i(TAG, "Observing viewmodel")
 
+        alertViewmodel.alerts.observe(viewLifecycleOwner, Observer { alerts->
+            alerts?.let{
+                Log.i(TAG,"alerts are observed")
+                prefHelper.saveUpdateTrackerTimes(trackerTimes)
+            }
+
+        })
+
         viewModel.trackers.observe(viewLifecycleOwner, Observer { trackers->
             trackers?.let {
                 Log.i(TAG,"trackers downloaded")
@@ -96,7 +99,9 @@ class AlertDashBoard : Fragment() {
                     trackerTimes[tracker.scriptName] = tracker.trackerNumber
                 }
                 Log.i(TAG,"refreshing data ")
-                viewModel.refreshData(checkLocalData(trackers))
+                val isLocalDataFresh = checkLocalData(trackers)
+                viewModel.refreshData(isLocalDataFresh)
+                if(!isLocalDataFresh) alertViewmodel.refreshData(false)
             }
         })
 

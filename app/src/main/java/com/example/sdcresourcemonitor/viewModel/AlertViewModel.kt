@@ -87,6 +87,7 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun fetchFromNetwork() {
+        Log.i(TAG,"Fetch from network is called")
         isLoading.value = true
         disposable.add(
             alertApi.getAllAlerts()
