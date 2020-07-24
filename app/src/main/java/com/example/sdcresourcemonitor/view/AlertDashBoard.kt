@@ -37,6 +37,7 @@ class AlertDashBoard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,this)
         Log.i(TAG,"onCreate method called")
     }
 

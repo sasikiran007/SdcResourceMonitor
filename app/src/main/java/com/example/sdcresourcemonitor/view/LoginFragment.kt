@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.FragmentLoginBinding
 import com.example.sdcresourcemonitor.viewModel.LoginViewModel
@@ -27,12 +28,14 @@ class LoginFragment : Fragment() {
     }
 
     private val viewModel by viewModels<LoginViewModel>()
-    private lateinit var binding : FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i(TAG,"LoginFragment called")
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
@@ -78,13 +81,14 @@ class LoginFragment : Fragment() {
 
     private fun observeAuthenticationState() {
         viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
-            when(authenticationState) {
-                LoginViewModel.AuthenticationState.AUTHENTICATED ->{
-                    binding.authButton.text = "LOGOUT"
-                    binding.authButton.setOnClickListener {
-                        AuthUI.getInstance().signOut(requireContext())
-                    }
-
+            when (authenticationState) {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+//                    binding.authButton.text = "LOGOUT"
+//                    binding.authButton.setOnClickListener {
+//                        AuthUI.getInstance().signOut(requireContext())
+                    val navController = findNavController()
+//                    navController.popBackStack(R.id.loginFragment,true)
+                    navController.navigate(LoginFragmentDirections.actionLoginFragmentToAlertDashBoard22())
                 }
                 else -> {
                     binding.authButton.text = "LOGIN"
