@@ -143,16 +143,22 @@ class AlertDashBoard : Fragment() {
     }
 
     private fun checkLocalData(trackers : List<AlertTracker>) : Boolean{
+        var isFresh = false
+        Log.i(TAG,"Check local data is called : ${trackers.size}")
         val hashMap : HashMap<String,String> = prefHelper.getUpdatedTrackerTimes()
-        var isFresh = true
+        Log.i(TAG,"Hashmap size is : ${hashMap.size}")
+        if(hashMap.isEmpty()) return isFresh
+
         for(tracker in trackers) {
             Log.i(TAG,"hashMap size"+hashMap.size)
             val scriptName = tracker.scriptName
             val trackerNumber = tracker.trackerNumber
             Log.i(TAG, "$scriptName,$trackerNumber," +hashMap["blue"])
             Toast.makeText(context,"$trackerNumber,"+hashMap["blue"],Toast.LENGTH_LONG).show()
-            if(!(hashMap.containsKey(scriptName) && hashMap[scriptName] == trackerNumber)) {
-                isFresh = false
+            val localTime = hashMap[scriptName]?.toLongOrNull()
+            val networkTime = trackerNumber.toLongOrNull()
+            if( localTime != null && networkTime != null && (localTime >= networkTime) ) {
+                isFresh = true
                 break
             }
         }

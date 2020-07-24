@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "997957470684",
+    "firebase_url": "https://sdc-resource-monitor.firebaseio.com",
+    "project_id": "sdc-resource-monitor",
+    "storage_bucket": "sdc-resource-monitor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997957470684:android:5b53dd3841ca77bf726719",
+        "android_client_info": {
+          "package_name": "com.example.sdcresourcemonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997957470684-mnjeg34mvtvhu1ek31ch5c67ahkae61l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sdcresourcemonitor",
+            "certificate_hash": "12f045595b610d4daf312239bbf16052ae4d6341"
+          }
+        },
+        {
+          "client_id": "997957470684-vdvnjtibfjkq2tlnh2bm0lpa19hrs8pj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgtXI76HEA_gqVcCVmch_Gi414RYeD3Ec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997957470684-vdvnjtibfjkq2tlnh2bm0lpa19hrs8pj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

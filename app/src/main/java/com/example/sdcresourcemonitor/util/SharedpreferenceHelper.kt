@@ -2,6 +2,7 @@ package com.example.sdcresourcemonitor.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import org.json.JSONObject
 
 class SharedpreferenceHelper {
@@ -38,10 +39,15 @@ class SharedpreferenceHelper {
     }
 
     fun getUpdatedTrackerTimes() : HashMap<String,String> {
+        Log.i("AlertDashBoard","getUpdatedTrackerTimes called")
         val timeMap : HashMap<String,String> = HashMap()
         val outString = pref?.getString(PREF_TRACKER_TIME,"")
+        if(outString.isNullOrEmpty()) return timeMap
+
+        Log.i("AlertDashBoard","$timeMap,$outString")
         val jsonObject = JSONObject(outString!!)
         val keys = jsonObject.keys()
+        Log.i("AlertDashBoard","$timeMap,$outString,$jsonObject,$keys")
         while(keys.hasNext()) {
             val key = keys.next().toString()
             val value :String  = jsonObject.get(key).toString()

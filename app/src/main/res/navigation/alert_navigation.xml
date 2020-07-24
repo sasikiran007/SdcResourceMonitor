@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/alert_navigation"
-    app:startDestination="@id/alertDashBoard2">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/alertDashBoard2"
         android:name="com.example.sdcresourcemonitor.view.AlertDashBoard"
@@ -28,4 +28,12 @@
             android:name="title"
             app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.sdcresourcemonitor.view.LoginFragment"
+        android:label="LoginFragment" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.sdcresourcemonitor.view.MainActivity"
+        android:label="MainActivity" />
 </navigation>

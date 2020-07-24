@@ -20,6 +20,20 @@ fun loadImage(view: TextView, epoch: Long?) {
     } else {
         view.text = "error"
     }
+}
 
+@BindingAdapter("stringEpochText")
+fun stringEpochToText(view: TextView, epoch: String?) {
+    val epochLong = epoch?.toLongOrNull()
 
+    if(epochLong != null) {
+        view.text = DateUtils.getRelativeTimeSpanString(
+            epochLong * 1000,
+            System.currentTimeMillis(),
+            DateUtils.MINUTE_IN_MILLIS
+        ).toString()
+    }
+    else {
+        view.text = "error"
+    }
 }

@@ -178,7 +178,7 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
             }
         })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             Log.i(TAG, "show grid : $_showFilterGrid")
             setVisibility(hasEntity = _showFilterGrid, hasProgress = true)
 //            if(!_showFilterGrid) setVisibility(hasProgress = isLoading)
@@ -192,22 +192,32 @@ class SelectedAlertsFragment : Fragment(), RadioButtonClickListener {
         })
     }
 
-    private fun checkLocalData(trackers : List<AlertTracker>) : Boolean {
-        val hashMap : HashMap<String,String> = prefHelper.getUpdatedTrackerTimes()
-        var isFresh = true
-        for(tracker in trackers) {
-            Log.i(TAG,"hashMap size"+hashMap.size)
+    private fun checkLocalData(trackers: List<AlertTracker>): Boolean {
+
+        var isFresh = false
+        Log.i(TAG, "Check local data is called : ${trackers.size}")
+        val hashMap: HashMap<String, String> = prefHelper.getUpdatedTrackerTimes()
+        Log.i(TAG, "Hashmap size is : ${hashMap.size}")
+        if (hashMap.isEmpty()) return isFresh
+
+        for (tracker in trackers) {
+            Log.i(TAG, "hashMap size" + hashMap.size)
             val scriptName = tracker.scriptName
             val trackerNumber = tracker.trackerNumber
-            Log.i(TAG, "$scriptName,$trackerNumber," +hashMap["blue"])
-            Toast.makeText(context,"$trackerNumber,"+hashMap["blue"], Toast.LENGTH_LONG).show()
-            if(!(hashMap.containsKey(scriptName) && hashMap[scriptName] == trackerNumber)) {
-                isFresh = false
+            Log.i(TAG, "$scriptName,$trackerNumber," + hashMap["blue"])
+            Toast.makeText(context, "$trackerNumber," + hashMap["blue"], Toast.LENGTH_LONG).show()
+
+            val localTime = hashMap[scriptName]?.toLongOrNull()
+            val networkTime = trackerNumber.toLongOrNull()
+            if (localTime != null && networkTime != null && (localTime >= networkTime)) {
+                isFresh = true
                 break
             }
         }
-        Log.i(TAG,"retruning isFresh :"+isFresh)
+        Log.i(TAG, "retruning isFresh :" + isFresh)
         return isFresh
+
+
     }
 
     private fun setVisibility(
