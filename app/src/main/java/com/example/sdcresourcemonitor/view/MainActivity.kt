@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -26,6 +27,7 @@ import com.example.sdcresourcemonitor.databinding.NavHeaderMainBinding
 import com.example.sdcresourcemonitor.view.adapter.AlertListAdapter
 import com.example.sdcresourcemonitor.viewModel.FirebaseUserLiveData
 import com.example.sdcresourcemonitor.viewModel.LoginViewModel
+import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -104,7 +106,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.i("NavHeader" , "$currentUser : ${currentUser.displayName}, ${currentUser.email}, ${currentUser.photoUrl}")
             }
         })
-//        headerBinding.viewModel = loginViewModel
 
     }
 
@@ -134,6 +135,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.lagout -> {
+                Log.i("LogInOut","Logged out!!")
+                AuthUI.getInstance().signOut(this)
+                loginViewModel.authenticationState.observe(this, Observer { authenticationState ->
+                    when(authenticationState) {
+                        LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+                            Log.i("LogInOut","Logged out still authenticated")
+                        }
+                        else -> {
+                            Log.i("LogInOut","Logged out and  not authenticated")
+                            navController.navigate(AlertDashBoardDirections.actionAlertDashBoard2ToLoginFragment())
+                        }
+                    }
+                })
+
 
             }
         }

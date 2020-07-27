@@ -6,11 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 
 class LoginViewModel : ViewModel() {
+//    var authenticationState = MutableLiveData<AuthenticationState>()
     enum class AuthenticationState{
         AUTHENTICATED, UNAUTHENTICATED, INVALID_AUTHENTICATION
     }
 
-    val authenticationState = FirebaseUserLiveData().map { user ->
+    var authenticationState = FirebaseUserLiveData().map { user ->
         if (user != null) {
             AuthenticationState.AUTHENTICATED
         } else {
@@ -21,5 +22,6 @@ class LoginViewModel : ViewModel() {
     val currentUser = FirebaseUserLiveData().map {user ->
         user
     }
+
 
 }

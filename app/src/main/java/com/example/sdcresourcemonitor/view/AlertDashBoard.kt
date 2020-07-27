@@ -40,8 +40,7 @@ class AlertDashBoard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,this)
-        Log.i(TAG,"onCreate method called")
+        Log.i("LogInOut","onCreate method called")
     }
 
     override fun onCreateView(
@@ -51,7 +50,6 @@ class AlertDashBoard : Fragment() {
     ): View? {
 
         Log.i(TAG,"onCreateView method called")
-        setupNavHeader()
         return  inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
     }
 
@@ -170,14 +168,6 @@ class AlertDashBoard : Fragment() {
         Log.i(TAG,"retruning isFresh :"+isFresh)
         return isFresh
     }
-
-    private fun setupNavHeader() {
-        headerBinding = DataBindingUtil.inflate(
-            layoutInflater,R.layout.nav_header_main,navView,false)
-
-    }
-
-
 
 
 }

@@ -12,6 +12,11 @@
         <action
             android:id="@+id/action_alertDashBoard2_to_alertListFragment2"
             app:destination="@id/alertListTabbedFragment2" />
+        <action
+            android:id="@+id/action_alertDashBoard2_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/alertDashBoard2"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/alertListTabbedFragment2"

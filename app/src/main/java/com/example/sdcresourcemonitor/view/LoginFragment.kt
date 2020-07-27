@@ -39,7 +39,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG,"LoginFragment called")
+        Log.i("LogInOut","LoginFragment called")
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
@@ -90,11 +90,13 @@ class LoginFragment : Fragment() {
 //                    binding.authButton.text = "LOGOUT"
 //                    binding.authButton.setOnClickListener {
 //                        AuthUI.getInstance().signOut(requireContext())
+                    Log.i("LogInOut","Authenticated")
                     val navController = findNavController()
 //                    navController.popBackStack(R.id.loginFragment,true)
                     navController.navigate(LoginFragmentDirections.actionLoginFragmentToAlertDashBoard22())
                 }
                 else -> {
+                    Log.i("LogInOut","Not Authenticated")
                     binding.authButton.text = "LOGIN"
                     binding.authButton.setOnClickListener {
                         launchSignInFlow()

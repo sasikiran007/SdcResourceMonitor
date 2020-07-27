@@ -36,7 +36,6 @@ class AlertViewModel(application: Application) : BaseViewModel(application) {
 
     private val alertApi = AlertApiService()
     private val disposable = CompositeDisposable()
-//    private val prefHelper = SharedpreferenceHelper.invoke(getApplication())
     private val database = AlertDatabase.invoke(application)
 
     fun refreshTrackers(newAlertSection : String, newAlertLevel : String, newEntity : String) {
