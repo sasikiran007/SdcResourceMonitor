@@ -11,13 +11,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.FragmentLoginBinding
+import com.example.sdcresourcemonitor.databinding.NavHeaderMainBinding
 import com.example.sdcresourcemonitor.viewModel.LoginViewModel
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class LoginFragment : Fragment() {
@@ -29,6 +32,7 @@ class LoginFragment : Fragment() {
 
     private val viewModel by viewModels<LoginViewModel>()
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var headerBinding: NavHeaderMainBinding
 
 
     override fun onCreateView(
@@ -99,5 +103,7 @@ class LoginFragment : Fragment() {
             }
         })
     }
+
+
 
 }

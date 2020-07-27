@@ -1,25 +1,26 @@
 package com.example.sdcresourcemonitor.view
 
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sdcresourcemonitor.R
+import com.example.sdcresourcemonitor.databinding.NavHeaderMainBinding
 import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
-
 
 class AlertDashBoard : Fragment() {
 
@@ -28,6 +29,8 @@ class AlertDashBoard : Fragment() {
     private lateinit var alertViewmodel : AlertViewModel
     private lateinit var prefHelper: SharedpreferenceHelper
     private val trackerTimes = hashMapOf<String,String>()
+
+    private lateinit var headerBinding : NavHeaderMainBinding
 
     private val alertStateAdapter =
         AlertStatListViewAdapter(
@@ -48,6 +51,7 @@ class AlertDashBoard : Fragment() {
     ): View? {
 
         Log.i(TAG,"onCreateView method called")
+        setupNavHeader()
         return  inflater.inflate(R.layout.fragment_alert_dashboard, container, false)
     }
 
@@ -165,6 +169,12 @@ class AlertDashBoard : Fragment() {
         }
         Log.i(TAG,"retruning isFresh :"+isFresh)
         return isFresh
+    }
+
+    private fun setupNavHeader() {
+        headerBinding = DataBindingUtil.inflate(
+            layoutInflater,R.layout.nav_header_main,navView,false)
+
     }
 
 

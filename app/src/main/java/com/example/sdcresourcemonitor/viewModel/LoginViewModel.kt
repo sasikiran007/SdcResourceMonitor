@@ -1,5 +1,7 @@
 package com.example.sdcresourcemonitor.viewModel
 
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 
@@ -15,4 +17,9 @@ class LoginViewModel : ViewModel() {
             AuthenticationState.UNAUTHENTICATED
         }
     }
+
+    val currentUser = FirebaseUserLiveData().map {user ->
+        user
+    }
+
 }
