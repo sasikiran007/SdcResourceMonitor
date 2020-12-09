@@ -7,7 +7,13 @@ import androidx.lifecycle.LiveData
 
 class FirebaseUserLiveData : LiveData<FirebaseUser?>() {
 
-    private val firebaseAuth = FirebaseAuth.getInstance()
+    companion object {
+        lateinit var firebaseAuth : FirebaseAuth
+    }
+
+    init {
+        firebaseAuth = FirebaseAuth.getInstance()
+    }
 
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         value = firebaseAuth.currentUser

@@ -8,3 +8,5 @@ enum class AlertLevel(val level : String) {
     MAJOR("major"),
     MINOR("minor")
 }
+
+val BASE_URL = "http://selfcare.sdc.bsnl.co.in/srmapp/"

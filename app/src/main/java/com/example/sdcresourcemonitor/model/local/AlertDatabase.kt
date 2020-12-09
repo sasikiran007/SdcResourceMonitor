@@ -8,7 +8,8 @@ import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
 
-@Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class),version = 3)
+@Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class,
+    User::class, Project::class, Role::class),version = 4)
 abstract class AlertDatabase : RoomDatabase() {
 
     abstract fun getAlertStatDao() : AlertStatDao

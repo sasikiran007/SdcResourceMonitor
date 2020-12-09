@@ -44,7 +44,7 @@ data class AlertStat
 )
 
 @Entity(tableName = "alert")
-data class Alert(
+    data class Alert(
     val date: Long,
 
     @ColumnInfo(name = "alert_id")
@@ -110,5 +110,6 @@ data class Alert(
             }
     }
 }
+
 
 data class radioEntity(val name: String, val isChecked: Boolean)

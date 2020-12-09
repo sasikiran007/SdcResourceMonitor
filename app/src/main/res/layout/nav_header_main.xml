@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.sdcresourcemonitor.viewModel.LoginViewModel" />
+            type="com.example.sdcresourcemonitor.viewModel.MainActivityLoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
