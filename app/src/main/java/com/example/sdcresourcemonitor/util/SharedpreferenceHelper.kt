@@ -7,6 +7,7 @@ import com.example.sdcresourcemonitor.model.local.User
 import org.json.JSONObject
 
 class SharedpreferenceHelper {
+
     companion object {
         private const val PREF_TIME = "Pref_Time"
         private const val PREF_TIME_LIST = "Pref_Time"

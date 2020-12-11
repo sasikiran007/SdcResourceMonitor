@@ -2,14 +2,11 @@ package com.example.sdcresourcemonitor.viewModel
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.model.local.AlertDatabase
 import com.example.sdcresourcemonitor.model.network.AlertApiService
-import com.example.sdcresourcemonitor.util.NotificationHelper
-import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -22,7 +19,7 @@ class AlertStatViewModel(application: Application) : BaseViewModel(application) 
 
     private val TAG = "AlertStatViewModel"
 
-    private val alertApiService = AlertApiService()
+    private val alertApiService = AlertApiService(application)
     private val disposable = CompositeDisposable()
     private val database = AlertDatabase.invoke(getApplication())
 

@@ -10,3 +10,4 @@ enum class AlertLevel(val level : String) {
 }
 
 val BASE_URL = "http://selfcare.sdc.bsnl.co.in/srmapp/"
+val HEADER_STRING = "Authorization1"

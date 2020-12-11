@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,6 +17,8 @@ import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.FragmentLoginBinding
 import com.example.sdcresourcemonitor.model.network.model.UserLogin
 import com.example.sdcresourcemonitor.model.network.model.UserSignup
+import com.example.sdcresourcemonitor.util.HEADER_STRING
+import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.viewModel.LoginViewModel
 import com.example.sdcresourcemonitor.viewModel.UserSignupViewModel
 import com.firebase.ui.auth.AuthUI
@@ -39,6 +42,7 @@ class LoginFragment : Fragment() {
     private lateinit var userSignupViewModel: UserSignupViewModel
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var userLoginViewModel: User
+    private lateinit var prefHelper: SharedpreferenceHelper
     private var email = ""
     private var uid = ""
 
@@ -69,6 +73,7 @@ class LoginFragment : Fragment() {
         userSignupViewModel = ViewModelProvider(this).get(UserSignupViewModel::class.java)
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         userLoginViewModel = ViewModelProvider(this).get(User::class.java)
+        prefHelper = SharedpreferenceHelper.invoke(requireContext())
 
         // [START config_signin]
         // Configure Google Sign In
@@ -79,20 +84,6 @@ class LoginFragment : Fragment() {
         // [END config_signin]
 //        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
-    }
-
-    private fun launchSignInFlow() {
-        val providers = arrayListOf(
-            AuthUI.IdpConfig.GoogleBuilder()
-                .build()
-        )
-        val intent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setIsSmartLockEnabled(false)
-            .setAvailableProviders(providers)
-            .build()
-
-        startActivityForResult(intent, SIGN_IN_RESULT_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -141,12 +132,30 @@ class LoginFragment : Fragment() {
             }
             else {
                 Log.i("LogInOut", "Error while sign in with gmail")
+
                 binding.authButton.visibility = View.VISIBLE
+                binding.progressBar2.visibility = View.GONE
                 binding.authButton.setOnClickListener {
+                    binding.authButton.visibility = View.GONE
+                    binding.progressBar2.visibility = View.VISIBLE
                     launchSignInFlow()
                 }
             }
         })
+    }
+
+    private fun launchSignInFlow() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.GoogleBuilder()
+                .build()
+        )
+        val intent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setIsSmartLockEnabled(false)
+            .setAvailableProviders(providers)
+            .build()
+
+        startActivityForResult(intent, SIGN_IN_RESULT_CODE)
     }
 
     private fun signup(userSignup: UserSignup) {
@@ -176,8 +185,10 @@ class LoginFragment : Fragment() {
                         "This email is not authorized , please contact the support team"
                     )
 
-                    //Todo user should be reomved from Firebase
+
+                    //Todo user should be removed from Firebase
                     //TOdo Display appropriate message
+                    Toast.makeText(requireContext(),"This User is not authorized!!",Toast.LENGTH_LONG).show()
                     AuthUI.getInstance().signOut(requireContext()).addOnCompleteListener {
                         loginViewModel.authenticationState.observe(
                             requireActivity(),
@@ -223,10 +234,11 @@ class LoginFragment : Fragment() {
         userLoginViewModel.loginResponse.observe(viewLifecycleOwner, Observer { loginResponse ->
             if (loginResponse != null) {
                 if (loginResponse.message().equals("ok", true) &&
-                    loginResponse.headers().get("Authorization")?.startsWith("Bearer", true) == true
+                    loginResponse.headers().get(HEADER_STRING)?.startsWith("Bearer", true) == true
                 ) {
-                    val authorizationToken = loginResponse.headers().get("Authorization")
+                    val authorizationToken = loginResponse.headers().get(HEADER_STRING)
                     //Todo Store this token
+                    authorizationToken?.let { prefHelper.saveUpdateAuthorizationToke(it) }
                     binding.authButton.visibility = View.GONE
                     val navController = findNavController()
                     navController.navigate(LoginFragmentDirections.actionLoginFragmentToAlertDashBoard22())

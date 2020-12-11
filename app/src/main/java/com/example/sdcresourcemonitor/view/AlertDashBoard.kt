@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +18,6 @@ import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
 class AlertDashBoard : Fragment() {
