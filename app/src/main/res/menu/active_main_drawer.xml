@@ -20,8 +20,8 @@
     <item android:title="" >
         <menu>
             <item
-                android:id="@+id/lagout"
-                android:title="Lagout"/>
+                android:id="@+id/layout"
+                android:title="Layout"/>
         </menu>
     </item>
 

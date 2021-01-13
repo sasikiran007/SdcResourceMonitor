@@ -7,14 +7,17 @@ import androidx.room.RoomDatabase
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
+import com.example.sdcresourcemonitor.model.Event
 
 @Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class,
-    User::class, Project::class, Role::class),version = 4)
+    User::class, Project::class, Role::class, Event::class),version = 5)
 abstract class AlertDatabase : RoomDatabase() {
 
     abstract fun getAlertStatDao() : AlertStatDao
 
     abstract fun getAlertDao() : AlertDao
+
+    abstract fun getEventDao() : EventDao
 
     companion object {
         @Volatile

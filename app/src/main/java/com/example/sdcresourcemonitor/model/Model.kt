@@ -16,9 +16,55 @@ data class AlertTracker(
     val scriptName: String,
 
     @ColumnInfo(name = "tracker_number")
-    val trackerNumber : String,
+    val trackerNumber: String,
 
-    val period : Int
+    val period: Int
+)
+
+@Entity(tableName = "event")
+data class Event(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uuid")
+    var uuid: Long,
+
+
+    @ColumnInfo(name = "alert_section")
+    val alertSection: String,
+
+    @ColumnInfo(name = "alert_level")
+    val alertLevel: String,
+
+
+    @ColumnInfo(name = "entity_id")
+    val entityId: String,
+
+    val entity: String,
+
+    @ColumnInfo(name = "property_value")
+    val propertyValue: String,
+
+    val property: String,
+
+    val hostname: String,
+
+    @ColumnInfo(name = "script_name")
+    val scriptName: String,
+
+    @ColumnInfo(name = "is_ended")
+    val isEnded: Int,
+
+    @ColumnInfo(name = "start_time")
+    val startTime: String,
+
+    @ColumnInfo(name = "end_time")
+    val endTime: String,
+
+    @ColumnInfo(name = "app_name")
+    val appName: String,
+
+    @ColumnInfo(name = "info_message")
+    val infoMessage: String
+
 )
 
 @Entity(tableName = "alert_stat")
@@ -44,7 +90,7 @@ data class AlertStat
 )
 
 @Entity(tableName = "alert")
-    data class Alert(
+data class Alert(
     val date: Long,
 
     @ColumnInfo(name = "alert_id")
@@ -98,15 +144,15 @@ data class AlertStat
 
         val comparator = compareBy<Alert> { it.entity }.thenBy { it.property }
             .thenByDescending {
-                var value : Double = 0.0
+                var value: Double = 0.0
                 var numeric = true
                 try {
                     value = parseDouble(it.propertyValue)
-                }catch (e: NumberFormatException) {
+                } catch (e: NumberFormatException) {
                     numeric = false
                 }
 
-               if(numeric) value else it.propertyValue
+                if (numeric) value else it.propertyValue
             }
     }
 }

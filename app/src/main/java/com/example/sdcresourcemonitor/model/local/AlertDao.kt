@@ -6,6 +6,7 @@ import androidx.room.Query
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
+import com.example.sdcresourcemonitor.model.Event
 
 @Dao
 interface AlertStatDao {
@@ -25,8 +26,25 @@ interface AlertStatDao {
 }
 
 @Dao
-interface AlertDao {
+interface EventDao {
+    @Insert
+    suspend fun insertAll(vararg  event: Event) : List<Long>
 
+    @Query("SELECT * from event")
+    suspend fun getAll() : List<Event>
+
+    @Query("DELETE from event")
+    suspend fun deleteAll()
+
+//    @Query("SELECT * from event WHERE uuid = :eventUID")
+//    suspend fun getAlertStat(eventUID : Long) :Event
+//
+//    @Query("SELECT * from event WHERE alert_level = :alertLevel")
+//    suspend fun getAlertStat(alertLevel : String) : List<Event>
+}
+
+@Dao
+interface AlertDao {
     @Insert
     suspend fun insertAll(vararg alert: Alert) :List<Long>
 

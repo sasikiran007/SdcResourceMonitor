@@ -6,6 +6,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.sdcresourcemonitor.model.Alert
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
+import com.example.sdcresourcemonitor.model.Event
 import com.example.sdcresourcemonitor.util.HEADER_STRING
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import io.reactivex.Single
@@ -52,6 +53,10 @@ class AlertApiService(val context: Context) {
 
     fun getTrackers() : Single<List<AlertTracker>> {
         return  api.getAlertTrackers()
+    }
+
+    fun getEvents(alertLevel : String) : Single<List<Event>> {
+        return api.getEvents(alertLevel)
     }
 
 }

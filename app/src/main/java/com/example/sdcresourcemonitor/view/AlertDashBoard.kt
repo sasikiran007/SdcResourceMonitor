@@ -16,8 +16,10 @@ import com.example.sdcresourcemonitor.databinding.NavHeaderMainBinding
 import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.util.SharedpreferenceHelper
 import com.example.sdcresourcemonitor.view.adapter.AlertStatListViewAdapter
+import com.example.sdcresourcemonitor.view.adapter.EventListAdapter
 import com.example.sdcresourcemonitor.viewModel.AlertStatViewModel
 import com.example.sdcresourcemonitor.viewModel.AlertViewModel
+import com.example.sdcresourcemonitor.viewModel.EventViewModel
 import kotlinx.android.synthetic.main.fragment_alert_dashboard.*
 
 class AlertDashBoard : Fragment() {
@@ -25,6 +27,8 @@ class AlertDashBoard : Fragment() {
     private val TAG = "AlertDashBoard"
     private lateinit var viewModel: AlertStatViewModel
     private lateinit var alertViewmodel : AlertViewModel
+    //Added EventViewmodel dec13 for event history
+//    private lateinit var eventViewModel : EventViewModel
     private lateinit var prefHelper: SharedpreferenceHelper
     private val trackerTimes = hashMapOf<String,String>()
 
@@ -35,6 +39,10 @@ class AlertDashBoard : Fragment() {
             ArrayList()
         )
 
+    //Added For event history on 04-jan-21
+
+//    private val eventListAdapter = EventListAdapter( ArrayList())
+//
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -56,16 +64,21 @@ class AlertDashBoard : Fragment() {
 
         viewModel = ViewModelProvider(this).get(AlertStatViewModel::class.java)
         alertViewmodel = ViewModelProvider(this).get(AlertViewModel::class.java)
+//        eventViewModel = ViewModelProvider(this).get(EventViewModel::class.java)
+//
         prefHelper = SharedpreferenceHelper.invoke(requireContext())
 
         errorTextView.visibility = View.GONE
         recyclerView.visibility = View.GONE
         progressBar.visibility = View.GONE
+        //Event
+//        recyclerViewHistory.visibility = View.GONE
 
         swipeTorefresh.setOnRefreshListener {
             errorTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
+//            recyclerViewHistory.visibility = View.VISIBLE
             viewModel.refreshTrackers()
             swipeTorefresh.isRefreshing = false
         }
@@ -75,6 +88,12 @@ class AlertDashBoard : Fragment() {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
         }
+        //Event
+//        recyclerViewHistory.apply {
+//            adapter = eventListAdapter
+//            layoutManager = LinearLayoutManager(context)
+//            addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
+//        }
 
         viewModel.refreshTrackers()
 
@@ -102,7 +121,11 @@ class AlertDashBoard : Fragment() {
                 Log.i(TAG,"refreshing data ")
                 val isLocalDataFresh = checkLocalData(trackers)
                 viewModel.refreshData(isLocalDataFresh)
+
                 if(!isLocalDataFresh) alertViewmodel.refreshData(false)
+//
+//                eventViewModel.refreshData(isLocalDataFresh)
+//
             }
         })
 
@@ -141,6 +164,34 @@ class AlertDashBoard : Fragment() {
                 }
             }
         })
+//
+//        eventViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+//            isLoading?.let {
+//                if(isLoading) {
+//                    Toast.makeText(context,"EventViewModel: isLoading is true",Toast.LENGTH_SHORT).show()
+//                } else {
+//                    Toast.makeText(context,"EventViewModel: isLoading is false",Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+//
+//        eventViewModel.hasError.observe(viewLifecycleOwner, Observer { hasError ->
+//            hasError?.let {
+//                if (hasError) {
+//                    Toast.makeText(context,"EventViewModel: hasError is true",Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+//
+//        eventViewModel.events.observe(viewLifecycleOwner, Observer { events ->
+//            events?.let {
+//                recyclerViewHistory.visibility = View.VISIBLE
+////                eventListAdapter.updateEvents(events)
+//                Toast.makeText(context,"EventViewModel: events is true",Toast.LENGTH_SHORT).show()
+//
+//            }
+//
+//        })
     }
 
     private fun checkLocalData(trackers : List<AlertTracker>) : Boolean{
@@ -155,7 +206,7 @@ class AlertDashBoard : Fragment() {
             val scriptName = tracker.scriptName
             val trackerNumber = tracker.trackerNumber
             Log.i(TAG, "$scriptName,$trackerNumber," +hashMap["blue"])
-            Toast.makeText(context,"$trackerNumber,"+hashMap["blue"],Toast.LENGTH_LONG).show()
+//            Toast.makeText(context,"$trackerNumber,"+hashMap["blue"],Toast.LENGTH_LONG).show()
             val localTime = hashMap[scriptName]?.toLongOrNull()
             val networkTime = trackerNumber.toLongOrNull()
             if( localTime != null && networkTime != null && (localTime >= networkTime) ) {

@@ -15,6 +15,8 @@ import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.view.AlertDashBoardDirections
 import com.example.sdcresourcemonitor.view.listener.ViewOnClickListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AlertStatListViewAdapter(private val alertStats: ArrayList<AlertStat>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(),
@@ -83,10 +85,11 @@ class AlertStatListViewAdapter(private val alertStats: ArrayList<AlertStat>) :
         else return TYPE_ITEM
     }
 
+    @ExperimentalStdlibApi
     override fun onClick(view: View) {
         var alertSection: String = view.tag.toString()
         val title = "$alertSection Alerts"
-        val newTitle = title.capitalize()
+        val newTitle = title.capitalize(Locale.ROOT)
         if (alertSection == "all") alertSection = "%%"
 
 //        Toast.makeText(view.context, "Item clicked!!! $alertSection", Toast.LENGTH_SHORT).show()
