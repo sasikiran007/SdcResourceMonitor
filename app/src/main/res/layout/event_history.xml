@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-<!--        <variable-->
-<!--            name="event"-->
-<!--            type="com.example.sdcresourcemonitor.model.Event" />-->
+        <variable
+            name="event"
+            type="com.example.sdcresourcemonitor.model.Event" />
+
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -14,65 +17,65 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="5dp">
 
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:padding="4dp">-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp">
 
-<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:id="@+id/timeMessage"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginStart="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginTop="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:inputType="textMultiLine|textNoSuggestions|none"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:text="Test message"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textColor="#673AB7"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textSize="11sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textStyle="bold"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintTop_toBottomOf="@+id/message" />&ndash;&gt;-->
+            <TextView
+                android:id="@+id/timeMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:inputType="textMultiLine|textNoSuggestions|none"
+                app:timeMessage="@{event}"
+                android:textColor="#673AB7"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/message" />
 
-<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:id="@+id/appName"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginStart="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginTop="8dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:inputType="textMultiLine|textNoSuggestions|none"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:text="Test message"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textSize="10sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textStyle="italic"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintTop_toBottomOf="@+id/entity" />&ndash;&gt;-->
+            <TextView
+                android:id="@+id/appName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine|textNoSuggestions|none"
+                android:text="@{event.appName}"
+                android:textSize="10sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/entity" />
 
-<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:id="@+id/message"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginStart="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginTop="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:inputType="textMultiLine|textNoSuggestions|none"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:text="Test message"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textColor="#E91E63"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textSize="13sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textStyle="bold"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintTop_toBottomOf="@+id/appName" />&ndash;&gt;-->
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:inputType="textMultiLine|textNoSuggestions|none"
+                android:text="@{event.infoMessage}"
+                android:textColor="#E91E63"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appName" />
 
-<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:id="@+id/time"&ndash;&gt;-->
-<!--&lt;!&ndash;                style="@style/Widget.SDC.RefreshTime.THeme"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginTop="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginEnd="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_marginRight="4dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:text="@{String.valueOf(event.startTime)}"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textSize="10sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+            <TextView
+                android:id="@+id/textTime"
+                style="@style/Widget.SDC.RefreshTime.THeme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                app:textTime="@{event.startTime}"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
 </layout>

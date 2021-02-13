@@ -35,7 +35,7 @@ interface EventDao {
 
     @Query("DELETE from event")
     suspend fun deleteAll()
-
+//
 //    @Query("SELECT * from event WHERE uuid = :eventUID")
 //    suspend fun getAlertStat(eventUID : Long) :Event
 //
@@ -45,6 +45,7 @@ interface EventDao {
 
 @Dao
 interface AlertDao {
+
     @Insert
     suspend fun insertAll(vararg alert: Alert) :List<Long>
 

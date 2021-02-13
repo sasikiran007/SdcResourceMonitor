@@ -10,7 +10,7 @@ import com.example.sdcresourcemonitor.model.AlertTracker
 import com.example.sdcresourcemonitor.model.Event
 
 @Database(entities = arrayOf(AlertStat::class, Alert::class, AlertTracker::class,
-    User::class, Project::class, Role::class, Event::class),version = 5)
+    User::class, Project::class, Role::class, Event::class),version = 6)
 abstract class AlertDatabase : RoomDatabase() {
 
     abstract fun getAlertStatDao() : AlertStatDao
