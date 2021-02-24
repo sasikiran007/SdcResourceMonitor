@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.EventHistoryBinding
 import com.example.sdcresourcemonitor.model.AlertStat
 import com.example.sdcresourcemonitor.model.Event
+import com.example.sdcresourcemonitor.view.EventDetails
 import com.example.sdcresourcemonitor.view.listener.ViewOnClickListener
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -53,7 +56,9 @@ class EventListAdapter(private val events: ArrayList<Event>) :
 
     override fun onClick(view: View) {
         val event = events[view.tag.toString().toInt()]
+        val activity: AppCompatActivity = view.context as AppCompatActivity
         Toast.makeText(view.context,"Hello : "+event.hostname,Toast.LENGTH_SHORT).show()
+        EventDetails.newInstance(event).show(activity.supportFragmentManager,"Hello00")
     }
 
 }
