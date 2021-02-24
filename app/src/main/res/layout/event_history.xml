@@ -13,68 +13,51 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:minWidth="120dp"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp">
+            android:layout_height="match_parent"
+            android:background="#F6CCCC"
+            android:minWidth="120dp">
 
             <TextView
-                android:id="@+id/timeMessage"
-                android:layout_width="0dp"
+                android:id="@+id/startTime"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
-                android:inputType="textMultiLine|textNoSuggestions|none"
-                app:timeMessage="@{event}"
-                android:textColor="#673AB7"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/message" />
-
-            <TextView
-                android:id="@+id/appName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:inputType="textMultiLine|textNoSuggestions|none"
-                android:text="@{event.appName}"
                 android:textSize="10sp"
-                android:textStyle="italic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/entity" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:textTime="@{event.startTime}" />
 
             <TextView
-                android:id="@+id/message"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:inputType="textMultiLine|textNoSuggestions|none"
-                android:text="@{event.infoMessage}"
-                android:textColor="#E91E63"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appName" />
-
-            <TextView
-                android:id="@+id/textTime"
-                style="@style/Widget.SDC.RefreshTime.THeme"
+                android:id="@+id/hostname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                app:textTime="@{event.startTime}"
-                android:textSize="10sp"
+                android:text="@{event.hostname}"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/startTime" />
+
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="11sp"
+                app:errorMessage="@{event}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hostname" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

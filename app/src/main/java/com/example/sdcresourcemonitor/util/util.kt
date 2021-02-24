@@ -43,6 +43,18 @@ fun textTime(view: TextView, epoch: String?) {
     }
 }
 
+@BindingAdapter("errorMessage")
+fun errorMessage(view: TextView, event : Event?) {
+    if(event == null) {
+        view.text = "error"
+    }else {
+        if(event.property.contains("ping") && event.propertyValue.contains("not"))
+            view.text = "No Ping"
+        else
+            view.text = "SomeError!!"
+    }
+}
+
 //@BindingAdapter("stringEpochText")
 //fun stringEpochToText(view: TextView, epoch: String?) {
 //    val epochLong = epoch?.toLongOrNull()

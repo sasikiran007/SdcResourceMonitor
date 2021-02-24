@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sdcresourcemonitor.R
 import com.example.sdcresourcemonitor.databinding.NavHeaderMainBinding
@@ -85,8 +86,9 @@ class AlertDashBoard : Fragment() {
 
         recyclerViewHistory.apply {
             adapter =  eventListViewAdapter
-            layoutManager = LinearLayoutManager(context)
-            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+//            layoutManager = LinearLayoutManager(context)
+//            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+            layoutManager = GridLayoutManager(context,3)
         }
 
         viewModel.refreshTrackers()
