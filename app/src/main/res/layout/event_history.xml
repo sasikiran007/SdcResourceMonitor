@@ -9,6 +9,14 @@
             name="event"
             type="com.example.sdcresourcemonitor.model.Event" />
 
+        <variable
+            name="listener"
+            type="com.example.sdcresourcemonitor.view.listener.ViewOnClickListener" />
+
+        <variable
+            name="position"
+            type="int" />
+
 
     </data>
 
@@ -17,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:minWidth="120dp"
+        android:onClick="@{listener::onClick}"
+        android:tag="@{position}"
         app:cardCornerRadius="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
