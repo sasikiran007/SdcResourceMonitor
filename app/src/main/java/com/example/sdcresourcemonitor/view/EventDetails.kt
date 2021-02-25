@@ -12,6 +12,8 @@ import com.example.sdcresourcemonitor.model.Event
 import kotlinx.android.synthetic.main.event_history.view.*
 import kotlinx.android.synthetic.main.event_history.view.hostname
 import kotlinx.android.synthetic.main.fragment_event_details.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 private const val KEY_HOSTNAME = "KEY_HOSTNAME"
@@ -58,11 +60,26 @@ class EventDetails : DialogFragment() {
     }
 
     private fun setupView(view: View) {
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+//        sdf.timeZone = TimeZone.getDefault()
+        val startTimeLong  = arguments?.getString(KEY_STARTTIME)?.toLong()
+        val endTimeLong  = arguments?.getString(KEY_ENDTIME)?.toLong()
+
+        if(startTimeLong != null) {
+            view.startTimeValue.text = sdf.format(Date(startTimeLong))
+        }else {
+            view.startTimeValue.text = "error"
+        }
+
+        if(endTimeLong != null) {
+            view.endTimeValue.text = sdf.format(Date(endTimeLong))
+        }else {
+            view.startTimeValue.text = "error"
+        }
+
         view.hostnameValue.text = arguments?.getString(KEY_HOSTNAME)
         view.appNameValue.text = arguments?.getString(KEY_APPNAME)
         view.messageValue.text = arguments?.getString(KEY_MESSAGE)
-        view.startTimeValue.text = arguments?.getString(KEY_STARTTIME)
-        view.endTimeValue.text = arguments?.getString(KEY_ENDTIME)
     }
 
     private fun setupClickListeners(view: View) {

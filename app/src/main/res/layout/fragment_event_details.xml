@@ -13,34 +13,37 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="30dp">
 
             <TextView
                 android:id="@+id/sl1"
                 android:layout_width="12dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_column="1"
                 android:text="1" />
 
             <TextView
                 android:id="@+id/hostname"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_column="2"
                 android:minWidth="100dp"
-                android:text="Hostname" />
+                android:text="Hostname :" />
 
             <TextView
                 android:id="@+id/hostnameValue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_column="3"
+                android:layout_weight="1"
                 android:text="TextView" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="30dp">
 
             <TextView
                 android:id="@+id/sl2"
@@ -54,20 +57,22 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:text="Application" />
+                android:text="Application :" />
 
             <TextView
                 android:id="@+id/appNameValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
+                android:layout_weight="1"
                 android:inputType="textMultiLine"
                 android:text="TextView" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="30dp">
 
             <TextView
                 android:id="@+id/sl3"
@@ -81,20 +86,23 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:text="Message" />
+                android:text="Message :" />
 
             <TextView
                 android:id="@+id/messageValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
+                android:layout_weight="1"
                 android:inputType="textMultiLine"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="#F3709D" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="30dp">
 
             <TextView
                 android:id="@+id/sl4"
@@ -108,19 +116,21 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:text="Start Time" />
+                android:text=" Start Time :" />
 
             <TextView
                 android:id="@+id/startTimeValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
+                android:layout_weight="1"
                 android:text="TextView" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="30dp">
 
             <TextView
                 android:id="@+id/sl5"
@@ -134,13 +144,14 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:text="End Time" />
+                android:text="End Time :" />
 
             <TextView
                 android:id="@+id/endTimeValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
+                android:layout_weight="1"
                 android:text="TextView" />
         </TableRow>
 

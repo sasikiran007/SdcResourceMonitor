@@ -57,7 +57,7 @@ class EventListAdapter(private val events: ArrayList<Event>) :
     override fun onClick(view: View) {
         val event = events[view.tag.toString().toInt()]
         val activity: AppCompatActivity = view.context as AppCompatActivity
-        Toast.makeText(view.context,"Hello : "+event.hostname,Toast.LENGTH_SHORT).show()
+//        Toast.makeText(view.context,"Hello : "+event.hostname,Toast.LENGTH_SHORT).show()
         EventDetails.newInstance(event).show(activity.supportFragmentManager,"Hello00")
     }
 
